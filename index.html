@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mobilité">
+<meta name="apple-mobile-web-app-title" content="Mobilité V2">
 <meta name="theme-color" content="#0a0a0b">
-<title>Protocole Mobilité — Suivi</title>
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlByb3RvY29sZSBNb2JpbGl0w6kiLAogICJzaG9ydF9uYW1lIjogIk1vYmlsaXTDqSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGEwYTBiIiwKICAidGhlbWVfY29sb3IiOiAiIzBhMGEwYiIKfQ==">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Mobilité V2 — Combat & Hanches</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0a0a0b;
@@ -21,9 +20,9 @@
   --text: #e8e8ec;
   --text-dim: #8a8a96;
   --text-muted: #5a5a66;
-  --accent: #ff6b35;
-  --accent-dim: #ff6b3518;
-  --accent-glow: #ff6b3530;
+  --accent: #ff3d3d;
+  --accent-dim: #ff3d3d18;
+  --accent-glow: #ff3d3d30;
   --accent-2: #4ecdc4;
   --accent-2-dim: #4ecdc418;
   --accent-3: #a78bfa;
@@ -34,7 +33,6 @@
   --yellow: #fbbf24;
   --yellow-dim: #fbbf2418;
   --red: #f87171;
-  --check-size: 22px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -49,7 +47,6 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* ===== HEADER ===== */
 .app-header {
   position: sticky;
   top: 0;
@@ -69,7 +66,7 @@ body {
 }
 .app-title {
   font-family: 'Space Mono', monospace;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -84,7 +81,6 @@ body {
   font-weight: 600;
 }
 
-/* Progress bar */
 .week-progress {
   display: flex;
   gap: 3px;
@@ -95,39 +91,36 @@ body {
   height: 4px;
   border-radius: 2px;
   background: var(--surface-3);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: all 0.3s;
 }
-.wp-dot.done {
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green-dim);
-}
-.wp-dot.partial {
-  background: var(--yellow);
-}
-.wp-dot.today {
-  box-shadow: 0 0 0 2px var(--accent), 0 0 8px var(--accent-glow);
-}
+.wp-dot.done { background: var(--green); box-shadow: 0 0 6px var(--green-dim); }
+.wp-dot.partial { background: var(--yellow); }
+.wp-dot.today { box-shadow: 0 0 0 2px var(--accent), 0 0 8px var(--accent-glow); }
 
-/* Phase tabs */
 .phase-tabs {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
 }
 .phase-tab {
   flex: 1;
-  padding: 7px 0;
+  min-width: 80px;
+  padding: 7px 6px;
   border-radius: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
   font-family: 'DM Sans', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 .phase-tab.active {
   border-color: var(--accent);
@@ -135,114 +128,123 @@ body {
   background: var(--accent-dim);
 }
 
-/* ===== MAIN ===== */
 .container {
   max-width: 500px;
   margin: 0 auto;
   padding: 16px 14px 120px;
 }
 
-/* Session selector */
-.session-toggle {
+.day-tabs {
   display: flex;
   gap: 6px;
   margin-bottom: 16px;
 }
-.session-btn {
+.day-btn {
   flex: 1;
-  padding: 12px;
+  padding: 12px 6px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text-dim);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
-  overflow: hidden;
-}
-.session-btn .s-icon { font-size: 1.1rem; display: block; margin-bottom: 2px; }
-.session-btn .s-time { font-size: 0.68rem; color: var(--text-muted); display: block; margin-top: 2px; }
-.session-btn.active.morning {
-  border-color: var(--yellow);
-  color: var(--yellow);
-  background: var(--yellow-dim);
-}
-.session-btn.active.evening {
-  border-color: var(--accent-3);
-  color: var(--accent-3);
-  background: var(--accent-3-dim);
-}
-.session-btn .s-check {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.7rem;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.session-btn .s-check.visible { opacity: 1; }
-
-/* Day tabs (evening) */
-.day-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
-}
-.day-tab {
-  flex: 1;
-  padding: 8px 0;
-  border-radius: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
   font-size: 0.72rem;
   font-weight: 600;
-  text-align: center;
   cursor: pointer;
   transition: all 0.2s;
+  text-align: center;
   font-family: 'DM Sans', sans-serif;
   position: relative;
 }
-.day-tab.active {
-  border-color: var(--accent-2);
-  color: var(--accent-2);
-  background: var(--accent-2-dim);
-}
-.day-tab .day-check {
-  display: block;
-  font-size: 0.6rem;
-  margin-top: 1px;
+.day-btn .d-num { font-family:'Space Mono',monospace; font-size: 1rem; display: block; font-weight:700; }
+.day-btn .d-name { font-size: 0.62rem; color: var(--text-muted); display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; font-weight:600; }
+.day-btn.active.day-1 { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.day-btn.active.day-2 { border-color: var(--accent-2); color: var(--accent-2); background: var(--accent-2-dim); }
+.day-btn.active.day-3 { border-color: var(--accent-3); color: var(--accent-3); background: var(--accent-3-dim); }
+.day-btn.active.day-4 { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
+.day-btn .d-check {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  font-size: 0.65rem;
   opacity: 0;
   transition: opacity 0.2s;
 }
-.day-tab .day-check.visible { opacity: 1; }
-
-/* Focus label */
-.focus-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--accent-2);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
-  padding-left: 2px;
+.day-btn .d-check.visible { opacity: 1; }
+.day-btn.optional .d-num::after {
+  content: '*';
+  color: var(--yellow);
+  margin-left: 1px;
 }
 
-/* ===== EXERCISE CARD ===== */
+.focus-banner {
+  background: linear-gradient(135deg, var(--surface), var(--surface-2));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+.focus-banner.day-2 { border-left-color: var(--accent-2); }
+.focus-banner.day-3 { border-left-color: var(--accent-3); }
+.focus-banner.day-4 { border-left-color: var(--yellow); }
+.focus-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.focus-banner.day-2 .focus-label { color: var(--accent-2); }
+.focus-banner.day-3 .focus-label { color: var(--accent-3); }
+.focus-banner.day-4 .focus-label { color: var(--yellow); }
+.focus-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.focus-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+
+.session-complete {
+  text-align: center;
+  padding: 18px;
+  margin-bottom: 14px;
+  background: var(--green-dim);
+  border: 1px solid var(--green-solid);
+  border-radius: 14px;
+  display: none;
+}
+.session-complete.visible { display: block; }
+.session-complete .sc-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.session-complete .sc-text { font-size: 0.88rem; font-weight: 700; color: var(--green); }
+.session-complete .sc-sub { font-size: 0.74rem; color: var(--text-dim); margin-top: 2px; }
+
+.section-divider {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 16px 0 8px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-divider.first { margin-top: 0; }
+
 .exercise-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
   margin-bottom: 10px;
   overflow: hidden;
-  transition: border-color 0.2s, opacity 0.3s;
+  transition: all 0.3s;
 }
 .exercise-card.completed {
-  opacity: 0.55;
+  opacity: 0.5;
   border-color: var(--green-solid);
 }
 
@@ -250,24 +252,22 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 14px;
+  padding: 14px;
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Custom checkbox */
 .ex-check {
-  width: var(--check-size);
-  height: var(--check-size);
-  min-width: var(--check-size);
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
   border-radius: 7px;
   border: 2px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
 }
 .ex-check svg {
   width: 13px;
@@ -294,13 +294,13 @@ body {
   font-weight: 600;
   font-size: 0.88rem;
   line-height: 1.3;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 .ex-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.7rem;
+  gap: 5px;
+  font-size: 0.68rem;
   color: var(--text-muted);
 }
 .ex-meta span {
@@ -316,34 +316,64 @@ body {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   transition: transform 0.2s;
   flex-shrink: 0;
 }
 .exercise-card.open .ex-expand { transform: rotate(180deg); }
 
-/* Expandable detail */
 .ex-detail {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.exercise-card.open .ex-detail {
-  max-height: 600px;
-}
+.exercise-card.open .ex-detail { max-height: 1200px; }
 .ex-detail-inner {
   padding: 0 14px 14px;
   border-top: 1px solid var(--border);
-  margin-top: 0;
   padding-top: 12px;
 }
-.ex-instructions {
+
+.ex-equip {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--accent-2);
+  background: var(--accent-2-dim);
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.ex-section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 10px 0 6px;
+}
+.ex-section-title:first-child { margin-top: 0; }
+
+.ex-text {
   font-size: 0.82rem;
   color: var(--text-dim);
   line-height: 1.65;
   margin-bottom: 10px;
 }
-.ex-instructions strong { color: var(--text); }
+.ex-text strong { color: var(--text); }
+
+.ex-utility {
+  font-size: 0.78rem;
+  color: var(--accent-2);
+  background: var(--accent-2-dim);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  border-left: 3px solid var(--accent-2);
+}
 
 .ex-targets {
   display: flex;
@@ -368,17 +398,7 @@ body {
   border-radius: 8px;
   margin-bottom: 10px;
   line-height: 1.5;
-}
-
-.ex-equip {
-  display: inline-block;
-  font-size: 0.7rem;
-  color: var(--accent-2);
-  background: var(--accent-2-dim);
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-weight: 600;
+  border-left: 3px solid var(--yellow);
 }
 
 .ex-video {
@@ -394,7 +414,6 @@ body {
   background: #f8717118;
 }
 
-/* ===== BOTTOM NAV ===== */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -427,11 +446,9 @@ body {
 .nav-btn .nav-icon { font-size: 1.2rem; display: block; margin-bottom: 2px; }
 .nav-btn.active { color: var(--accent); background: var(--accent-dim); }
 
-/* ===== PAGES ===== */
 .page { display: none; }
 .page.active { display: block; }
 
-/* ===== STATS PAGE ===== */
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -463,7 +480,94 @@ body {
   margin-bottom: 16px;
 }
 
-/* Calendar grid */
+.test-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.test-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.test-desc { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 12px; line-height: 1.5; }
+.test-inputs { display: flex; gap: 6px; flex-wrap: wrap; }
+.test-input-group { flex: 1; min-width: 80px; }
+.test-input-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.test-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.test-input:focus { border-color: var(--accent); }
+.test-input::placeholder { color: var(--text-muted); }
+.test-save-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.test-history { margin-top: 10px; font-size: 0.75rem; color: var(--text-dim); }
+.test-history-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.test-history-row:last-child { border-bottom: none; }
+
+.intro-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.intro-card h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.intro-card p, .intro-card li {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+.intro-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+.intro-card ul li {
+  padding-left: 14px;
+  position: relative;
+}
+.intro-card ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -487,7 +591,6 @@ body {
   font-weight: 600;
   color: var(--text-muted);
   background: var(--surface-2);
-  position: relative;
 }
 .cal-day.empty { background: none; }
 .cal-day.done { background: var(--green-dim); color: var(--green); }
@@ -495,86 +598,6 @@ body {
 .cal-day.today { box-shadow: 0 0 0 2px var(--accent); color: var(--text); }
 .cal-day.future { opacity: 0.3; }
 
-/* ===== TESTS PAGE ===== */
-.test-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 12px;
-}
-.test-title {
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
-.test-desc {
-  font-size: 0.78rem;
-  color: var(--text-dim);
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-.test-inputs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.test-input-group {
-  flex: 1;
-  min-width: 80px;
-}
-.test-input-label {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 4px;
-}
-.test-input {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  font-family: 'Space Mono', monospace;
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.test-input:focus { border-color: var(--accent); }
-.test-input::placeholder { color: var(--text-muted); }
-
-.test-save-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-weight: 700;
-  font-size: 0.82rem;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: opacity 0.2s;
-}
-.test-save-btn:active { opacity: 0.8; }
-
-.test-history {
-  margin-top: 10px;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-.test-history-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  border-bottom: 1px solid var(--border);
-}
-.test-history-row:last-child { border-bottom: none; }
-
-/* RESET */
 .reset-section {
   margin-top: 30px;
   padding: 16px;
@@ -595,13 +618,8 @@ body {
   font-family: 'DM Sans', sans-serif;
   margin-top: 8px;
 }
-.reset-hint {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
+.reset-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; }
 
-/* SECTION TITLE */
 .section-title {
   font-family: 'Space Mono', monospace;
   font-size: 0.9rem;
@@ -610,22 +628,6 @@ body {
   padding-left: 2px;
 }
 
-/* Session complete badge */
-.session-complete {
-  text-align: center;
-  padding: 20px;
-  margin-bottom: 16px;
-  background: var(--green-dim);
-  border: 1px solid var(--green-solid);
-  border-radius: 14px;
-  display: none;
-}
-.session-complete.visible { display: block; }
-.session-complete .sc-icon { font-size: 2rem; margin-bottom: 6px; }
-.session-complete .sc-text { font-size: 0.88rem; font-weight: 700; color: var(--green); }
-.session-complete .sc-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
-
-/* Animations */
 @keyframes checkPop {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
@@ -634,39 +636,34 @@ body {
 .exercise-card.just-checked .ex-check {
   animation: checkPop 0.3s ease;
 }
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.exercise-card {
-  animation: slideUp 0.3s ease forwards;
-}
+.exercise-card { animation: slideUp 0.3s ease forwards; }
 
 @media (max-width: 380px) {
   .ex-name { font-size: 0.82rem; }
   .container { padding: 12px 10px 120px; }
+  .day-btn { padding: 10px 4px; }
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="app-header">
   <div class="header-top">
-    <div class="app-title">PROTO <span>MOBILITÉ</span></div>
+    <div class="app-title">MOBILITÉ <span>V2</span></div>
     <div class="week-indicator" id="weekIndicator">Sem 1 · Phase 1</div>
   </div>
   <div class="week-progress" id="weekProgress"></div>
   <div class="phase-tabs" id="phaseTabs"></div>
 </div>
 
-<!-- PAGE: WORKOUT -->
 <div class="container">
   <div class="page active" id="page-workout">
-    <div class="session-toggle" id="sessionToggle"></div>
     <div class="day-tabs" id="dayTabs"></div>
-    <div class="focus-label" id="focusLabel"></div>
+    <div class="focus-banner" id="focusBanner"></div>
     <div class="session-complete" id="sessionComplete">
       <div class="sc-icon">✅</div>
       <div class="sc-text">Séance terminée !</div>
@@ -686,7 +683,7 @@ body {
 
   <div class="page" id="page-tests">
     <div class="section-title">🎯 Tests de progression</div>
-    <p style="font-size:0.78rem; color:var(--text-dim); margin-bottom:16px;">Fais ces tests en Semaine 1, 3 et 6 pour mesurer tes progrès.</p>
+    <p style="font-size:0.78rem; color:var(--text-dim); margin-bottom:16px;">Fais ces tests Sem 1, 4 et 8 pour mesurer tes progrès.</p>
     <div id="testCards"></div>
     <div class="reset-section">
       <div style="font-size:0.82rem; font-weight:600; color:var(--text-dim);">Réinitialiser les données</div>
@@ -694,9 +691,63 @@ body {
       <div class="reset-hint">Cette action est irréversible</div>
     </div>
   </div>
+
+  <div class="page" id="page-info">
+    <div class="section-title">📖 Programme</div>
+
+    <div class="intro-card">
+      <h3>🎯 Objectifs</h3>
+      <ul>
+        <li><strong>Mobilité hanche 3D</strong> (rotation, bascule, déhanché latéral)</li>
+        <li><strong>Renforcement psoas iliaque dynamique</strong> — résoudre douleurs sprint/fente rotative</li>
+        <li><strong>Stabilité unilatérale fonctionnelle</strong> — base kicks et lutte</li>
+        <li><strong>Dissociation thoraco-pelvienne</strong> — clé combat ET salsa</li>
+        <li><strong>Chaîne postérieure</strong> — toujours en travail de fond</li>
+        <li><strong>Préparation overhead</strong> — pour OH squat / clinch / kicks</li>
+      </ul>
+    </div>
+
+    <div class="intro-card">
+      <h3>📅 Structure</h3>
+      <ul>
+        <li><strong>3 séances/sem obligatoires</strong> + 1 optionnelle (jours flexibles)</li>
+        <li><strong>15-20 min</strong> par séance</li>
+        <li><strong>8 semaines · 4 phases de 2 semaines</strong></li>
+        <li><strong>Jour 1</strong> — Hanches 3D + dissociation pelvienne</li>
+        <li><strong>Jour 2</strong> — Psoas iliaque + chaîne antérieure dynamique</li>
+        <li><strong>Jour 3</strong> — Unilatéral + chaîne postérieure</li>
+        <li><strong>Jour 4 (opt)</strong> — Flow combat / overhead / récup active</li>
+      </ul>
+    </div>
+
+    <div class="intro-card">
+      <h3>🔧 Matériel</h3>
+      <p>Élastiques (différentes résistances) · Foam roller · 2 KB 8 kg · 2 haltères 2 kg · Gilet lesté jusqu'à 10 kg · 2 blocs yoga · Tapis · Bâton · Barre de traction (à 2 min)</p>
+    </div>
+
+    <div class="intro-card">
+      <h3>📐 Phases</h3>
+      <ul>
+        <li><strong>Phase 1 (Sem 1-2) :</strong> Activation & contrôle moteur</li>
+        <li><strong>Phase 2 (Sem 3-4) :</strong> Charge légère & dynamique</li>
+        <li><strong>Phase 3 (Sem 5-6) :</strong> Force end-range & dissociation</li>
+        <li><strong>Phase 4 (Sem 7-8) :</strong> Intégration combat / overhead</li>
+      </ul>
+    </div>
+
+    <div class="intro-card">
+      <h3>⚙️ Règles</h3>
+      <ul>
+        <li>Pas obligé de faire les jours dans l'ordre — mais fais les 3 dans la semaine</li>
+        <li>Espace minimum 24h entre Jour 2 et Jour 3 (psoas + unilatéral = recoupement)</li>
+        <li>Jour 4 = récup active, peut se faire le lendemain d'un combat/sport</li>
+        <li>Si douleur aiguë au psoas : skip le Jour 2 cette semaine, reste sur 2-3</li>
+        <li>Intensité stretch : 6-7/10. Inconfort OK, douleur jamais</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
   <button class="nav-btn active" onclick="switchPage('workout')" id="nav-workout">
     <span class="nav-icon">🏋️</span>Séance
@@ -707,184 +758,531 @@ body {
   <button class="nav-btn" onclick="switchPage('tests')" id="nav-tests">
     <span class="nav-icon">🎯</span>Tests
   </button>
+  <button class="nav-btn" onclick="switchPage('info')" id="nav-info">
+    <span class="nav-icon">📖</span>Info
+  </button>
 </div>
 
 <script>
+const Y = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+
 // ============================================================
-// DATA: All exercises organized by phase > session > day
+// PROGRAM DATA - 8 weeks, 4 phases of 2 weeks each
+// 4 days per phase: J1 Hanches 3D · J2 Psoas · J3 Unilatéral · J4 Flow combat (opt)
 // ============================================================
 const PROGRAM = {
   phases: [
-    {
-      id: 'p1', name: 'Phase 1', label: 'Sem 1-2', weeks: [1,2],
-      morning: {
-        exercises: [
-          { id:'p1m1', name:'Cat-Cow', meta:['50 sec','10 cycles'], targets:['Colonne complète','Mobilité segmentaire'], instructions:'À quatre pattes, mains sous les épaules, genoux sous les hanches. Inspire : creuse le dos, relève la tête. Expire : arrondis le dos au maximum, rentre le menton. 5 secondes par position.', video:'https://www.youtube.com/results?search_query=cat+cow+stretch+mobilit%C3%A9+dos' },
-          { id:'p1m2', name:'90/90 Hip Switch', meta:['90 sec','8 transitions','3 sec/côté'], targets:['Rotation interne hanche','Rotation externe hanche'], instructions:'Assis au sol, jambes en 90/90. Pivote les deux jambes pour changer de côté. Garde le torse droit, 3 sec de pause par côté. Bloc yoga sous la fesse si nécessaire.', tip:'Si une hanche est plus raide, passe 1 rep de plus du côté raide.', video:'https://www.youtube.com/results?search_query=90+90+hip+switch+mobility+drill' },
-          { id:'p1m3', name:'Deep Squat Hold (Assisté)', meta:['60 sec','2×30 sec','10 sec repos'], targets:['Flexion hanche','Dorsiflexion cheville','Décompression lombaire'], instructions:'Squat profond, tiens-toi à un montant de porte. Pieds largeur d\'épaules, pointes 30° vers l\'extérieur. Pousse les genoux dehors avec les coudes. Respire : 4 sec inspire, 6 sec expire.', tip:'Talons qui décollent ? Place-les sur un livre de 2-3 cm.', video:'https://www.youtube.com/results?search_query=deep+squat+hold+mobility+assisted' },
-          { id:'p1m4', name:'Forward Fold + Respiration', meta:['60 sec','1×60 sec'], targets:['Ischio-jambiers','Fascia thoraco-lombaire','Relâchement nerveux'], instructions:'Debout, pieds joints, laisse-toi tomber vers l\'avant. Ne tire pas, laisse la gravité faire. Balance doucement. À chaque expiration, relâche un peu plus. Note où arrivent tes mains.', tip:'Ce qui te bloque c\'est ton système nerveux, pas tes muscles. La respiration lente le convainc de lâcher.', video:'https://www.youtube.com/results?search_query=standing+forward+fold+stretch+ragdoll' }
-        ]
-      },
-      evening: {
-        days: [
-          { id:'d1', name:'LUN', fullName:'Lundi', focus:'Hanches : Flexion + Adducteurs',
-            exercises: [
-              { id:'p1e1d1a', name:'Squat Cosaque (Assisté)', meta:['2 min 30','5 reps/côté','3 sec tenu'], targets:['Adducteurs','Flexion hanche unilatérale','Cheville'], instructions:'Debout, pieds très larges. Descends latéralement sur une jambe, l\'autre tendue. Tiens-toi à un meuble. 3 sec en bas, remonte et change.', video:'https://www.youtube.com/results?search_query=cossack+squat+mobility+tutorial' },
-              { id:'p1e1d1b', name:'Frog Stretch — Bascule active', meta:['3 min','12 bascules + 30 sec tenu'], targets:['Adducteurs profonds','Ouverture hanche'], equip:'Bloc yoga optionnel', instructions:'À quatre pattes, genoux écartés max, pieds vers l\'extérieur. Bascule fesses vers talons puis vers l\'avant. 12 bascules lentes, puis tiens 30 sec en bas.', video:'https://www.youtube.com/results?search_query=frog+stretch+adducteurs+mobilit%C3%A9' },
-              { id:'p1e1d1c', name:'90/90 Stretch tenu + Inclinaison', meta:['2 min 30','45 sec/côté + 15 sec incliné'], targets:['Rotation externe profonde','Piriforme','Capsule hanche'], equip:'Bloc yoga', instructions:'Position 90/90, reste d\'un côté. Bloc sous la fesse si nécessaire. Tiens 45 sec, puis incline le torse vers l\'avant par-dessus le tibia, 15 sec. Change de côté.', video:'https://www.youtube.com/results?search_query=90+90+stretch+hip+lean+forward' },
-              { id:'p1e1d1d', name:'Deep Squat Hold + Poussée coudes', meta:['2 min','2×45 sec','15 sec repos'], targets:['Flexion hanche maximale','Adducteurs','Cheville'], instructions:'Squat profond sans aide si possible. Mains jointes (position prière), coudes contre les genoux. Pousse les genoux vers l\'extérieur. Respire longuement.', video:'https://www.youtube.com/results?search_query=deep+squat+hold+elbow+push+knees' }
-            ]
-          },
-          { id:'d2', name:'MAR', fullName:'Mardi', focus:'Chaîne Postérieure',
-            exercises: [
-              { id:'p1e1d2a', name:'Jefferson Curl — Poids de corps', meta:['3 min','8 reps','Tempo 5-0-5-0'], targets:['Érecteurs du rachis','Ischio-jambiers','Fascia thoraco-lombaire'], instructions:'Sur une marche (10-15 cm). Pieds joints. Menton vers poitrine, déroule vertèbre par vertèbre. Mains descendent le long des jambes. 5 sec descente, 5 sec montée. Jambes quasi tendues.', tip:'C\'est L\'EXERCICE le plus efficace pour toucher tes orteils. Le déroulé segmentaire réapprend à ton système nerveux que l\'amplitude est sûre.', video:'https://www.youtube.com/results?search_query=jefferson+curl+bodyweight+tutorial+mobility' },
-              { id:'p1e1d2b', name:'Ischio-jambiers actifs — PNF', meta:['3 min','5 cycles/jambe','5 sec contraction'], targets:['Ischio-jambiers','Inhibition réciproque','Technique PNF'], instructions:'Allongé sur le dos, une jambe levée. Attrape l\'arrière de la cuisse, tends la jambe en contractant le quadriceps (5 sec). Puis POUSSE la jambe vers le bas contre tes mains (5 sec à 50%). Relâche et gagne l\'amplitude. 5 cycles/jambe.', tip:'La technique PNF est la méthode la plus rapide prouvée scientifiquement. Gain de 2-5° par cycle.', video:'https://www.youtube.com/results?search_query=PNF+hamstring+stretch+contract+relax' },
-              { id:'p1e1d2c', name:'Elephant Walk', meta:['2 min','5 allers-retours'], targets:['Ischio-jambiers dynamique','Mollets','Fascia postérieur'], instructions:'Mains au sol, jambes quasi tendues. Avance en petits pas alternés mains/pieds. Talons cherchent le sol. 4-5 pas aller, 4-5 pas retour.', video:'https://www.youtube.com/results?search_query=elephant+walk+hamstring+mobility+drill' },
-              { id:'p1e1d2d', name:'Forward Fold progressif', meta:['2 min','2×50 sec','10 sec repos'], targets:['Chaîne postérieure complète','Relâchement nerveux'], instructions:'Debout, pieds joints. Relâche vers l\'avant. Genoux légèrement pliés au début, tends progressivement. Respire en 4-6-8. Ne tire pas, ne rebondis pas.', video:'https://www.youtube.com/results?search_query=standing+forward+fold+progressive+stretch' }
-            ]
-          },
-          { id:'d3', name:'MER', fullName:'Mercredi', focus:'Extension Hanche + Psoas',
-            exercises: [
-              { id:'p1e1d3a', name:'Half-Kneeling Hip Flexor + PNF', meta:['3 min','3 cycles PNF/côté'], targets:['Psoas','Iliacus','Rectus femoris'], equip:'Bloc yoga', instructions:'Genou arrière au sol (sur bloc plié). Serre la fesse arrière, pousse le bassin vers l\'avant. Tiens 20 sec. Contracte le psoas 5 sec (ramène le genou vers l\'avant en résistant). Relâche et pousse plus loin. 3 cycles/côté.', tip:'C\'est LA position qui va soulager ton dos. Un psoas raccourci tire sur L1-L4 et crée une lordose excessive.', video:'https://www.youtube.com/results?search_query=half+kneeling+hip+flexor+stretch+PNF+psoas' },
-              { id:'p1e1d3b', name:'Couch Stretch', meta:['3 min','2×40 sec/côté','10 sec repos'], targets:['Psoas profond','Quadriceps','Rectus femoris'], instructions:'Genou arrière contre un mur, tibia vertical, pied au mur. Pied avant à plat, genou 90°. Torse droit, serre la fesse arrière. Si trop intense, recule du mur.', tip:'C\'est l\'étirement le plus intense du protocole. 20 sec au lieu de 40 au début c\'est OK.', video:'https://www.youtube.com/results?search_query=couch+stretch+tutorial+hip+flexor' },
-              { id:'p1e1d3c', name:'Glute Bridge — Activation', meta:['2 min','12 reps + 30 sec tenu','3 sec squeeze'], targets:['Activation fessiers','Extension hanche','Correction antéversion'], instructions:'Allongé, pieds au sol. Monte le bassin en serrant les fesses AU MAXIMUM en haut. 3 sec en haut, redescends. 12 reps puis tiens 30 sec en haut.', tip:'Tes fessiers sont inhibés (amnésie glutéale). Les réactiver est aussi important que le stretching pour tes lombaires.', video:'https://www.youtube.com/results?search_query=glute+bridge+activation+hold+technique' },
-              { id:'p1e1d3d', name:'Prone Press-Up (McKenzie)', meta:['2 min','10 reps + 20 sec tenu'], targets:['Extension lombaire','Réhydratation discale','Soulagement lombaire'], instructions:'Sur le ventre, mains à côté des épaules. Pousse le torse vers le haut, bassin collé au sol. Expire en montant. 10 reps lentes + 20 sec tenu en haut. Si douleur aiguë : réduis l\'amplitude.', video:'https://www.youtube.com/results?search_query=mckenzie+press+up+extension+lombaire' }
-            ]
-          },
-          { id:'d4', name:'JEU', fullName:'Jeudi', focus:'Colonne thoracique + Rotations',
-            exercises: [
-              { id:'p1e1d4a', name:'Open Book', meta:['3 min','8 reps/côté','3 sec tenu'], targets:['Rotation thoracique','Dissociation thorax/bassin','Pectoraux'], instructions:'Sur le côté, genoux pliés à 90°, bras superposés devant. Le bras du dessus s\'ouvre vers l\'arrière en suivant la main des yeux. Bassin et genoux NE BOUGENT PAS. Expire en ouvrant, 3 sec en rotation max. 8 reps/côté.', tip:'Si ton thoracique ne tourne pas, tes lombaires compensent dans TOUS tes mouvements sportifs.', video:'https://www.youtube.com/results?search_query=open+book+thoracic+rotation+stretch' },
-              { id:'p1e1d4b', name:'Thread the Needle', meta:['3 min','8 reps/côté','2 sec tenu'], targets:['Rotation thoracique','Grand dorsal','Rhomboïdes'], instructions:'À quatre pattes. Passe le bras droit sous le corps en tournant, épaule/joue au sol (2 sec). Puis ouvre le même bras vers le plafond (2 sec). Mouvement fluide. 8 reps/côté.', video:'https://www.youtube.com/results?search_query=thread+the+needle+thoracic+mobilit%C3%A9' },
-              { id:'p1e1d4c', name:'Cat-Cow segmentaire lent', meta:['2 min','6 cycles (10 sec chaque)'], targets:['Mobilité segmentaire','Proprioception vertébrale','Extension/flexion thoracique'], instructions:'Cat-Cow très lent, vertèbre par vertèbre. Commence par le bassin vers la tête, puis inverse. 10 sec par cycle. Concentre-toi sur les vertèbres thoraciques (milieu du dos).', video:'https://www.youtube.com/results?search_query=segmental+cat+cow+slow+spinal+wave' },
-              { id:'p1e1d4d', name:'Wall Slide (Ange au mur)', meta:['2 min','10 reps','Tempo 3-1-3-1'], targets:['Extension thoracique','Mobilité scapulaire','Rotation externe épaule'], instructions:'Dos au mur, pieds 20 cm devant. Tête, dos, fesses au mur. Bras en "cactus", dos des mains et coudes au mur. Glisse les bras vers le haut. Garde TOUT en contact avec le mur.', video:'https://www.youtube.com/results?search_query=wall+slide+angel+thoracic+extension+mobility' }
-            ]
-          },
-          { id:'d5', name:'VEN', fullName:'Vendredi', focus:'Flow intégral',
-            exercises: [
-              { id:'p1e1d5a', name:'World\'s Greatest Stretch', meta:['4 min','5 reps/côté','2-3 sec/position'], targets:['Psoas','Ischio-jambiers','Adducteurs','Rotation thoracique','Cheville'], instructions:'Séquence en 4 temps : 1) Fente avant, genou arrière au sol. 2) Main intérieure au sol, coude vers le sol. 3) Rotation bras vers le plafond. 4) Tends la jambe avant, fesses vers le haut. 5 reps/côté.', tip:'Si tu ne devais garder qu\'UN SEUL exercice de mobilité dans ta vie, ce serait celui-ci.', video:'https://www.youtube.com/results?search_query=world+greatest+stretch+tutorial+mobility' },
-              { id:'p1e1d5b', name:'Inchworm + Squat', meta:['3 min','6 reps'], targets:['Chaîne postérieure dynamique','Core','Flexion hanche'], instructions:'Mains au sol, marche vers l\'avant en planche, pompe optionnelle, marche les pieds vers les mains, squat profond 3 sec, remonte.', video:'https://www.youtube.com/results?search_query=inchworm+to+squat+mobility+flow' },
-              { id:'p1e1d5c', name:'Shinbox Get-Up (Assisté)', meta:['3 min','4 reps/côté'], targets:['Force dans l\'amplitude','Rotation hanche sous charge','Contrôle moteur'], instructions:'Assis en 90/90. Mains au sol derrière. Lève le bassin, monte en chevalier servant. Redescends en contrôlant. Change de côté. Utilise les mains autant que nécessaire.', tip:'C\'est ce qui rend les gains de mobilité PERMANENTS : la force dans l\'amplitude.', video:'https://www.youtube.com/results?search_query=shinbox+get+up+transition+mobility+hip' }
-            ]
-          }
-        ]
-      }
+    // ============= PHASE 1 - SEM 1-2 : ACTIVATION =============
+    { id:'p1', name:'Phase 1', label:'Sem 1-2', weeks:[1,2], desc:'Activation & contrôle moteur',
+      days: [
+        { id:'d1', name:'Hanches 3D', focus:'Rotation, bascule, déhanché — Mobilité pelvienne fondamentale', exercises:[
+          { section:'Activation' },
+          { id:'p1d1a', name:'Foam Roll Fessiers + Bandelette IT', meta:['1 min/côté'], equip:'Foam roller', targets:['Tissu profond','Préparation'],
+            description:'Allongé sur le côté, foam sous le grand fessier puis sous la bandelette IT (face latérale de la cuisse). Rouler lentement de la crête iliaque jusqu\'au-dessus du genou. Insister 10-15 sec sur les points sensibles en respirant.',
+            utility:'Libère les tensions des rotateurs externes de hanche qui bloquent la rotation interne. Indispensable avant tout travail de hanche 3D.',
+            video: Y('foam roller glutes IT band release') },
+          { id:'p1d1b', name:'Cercles de bassin debout', meta:['8 cercles/sens'], targets:['Mobilisation pelvienne','Échauffement'],
+            description:'Debout, pieds largeur d\'épaules, mains sur les hanches. Fais des grands cercles avec le bassin uniquement (pas les épaules). Le tronc reste vertical. 8 cercles dans un sens, 8 dans l\'autre. Cherche une amplitude maximale.',
+            utility:'Réveille la mobilité pelvienne dans les 360° — c\'est la base du déhanché et de la dissociation thoracique/bassin pour la salsa et les esquives en boxe.',
+            video: Y('hip circles standing pelvic mobility') },
+          
+          { section:'Travail principal' },
+          { id:'p1d1c', name:'90/90 Hip Switch + Lift-Off', meta:['8 transitions','3 lift/côté','3 sec tenu'], targets:['Rotation interne','Rotation externe','Force amplitude'],
+            description:'Assis au sol en position 90/90 (jambe avant 90°, jambe arrière 90°, deux genoux au sol). Pivote les deux jambes ensemble pour changer de côté, garde le torse droit. 8 transitions. Puis reste d\'un côté et décolle le genou arrière de 2-3 cm en contractant la hanche, tiens 3 sec. 3 lift-off par côté.',
+            utility:'C\'est l\'exercice n°1 pour gagner de la rotation de hanche dans les deux sens. Le lift-off développe la force ACTIVE dans l\'amplitude — c\'est ce qui rend les gains permanents et transférables.',
+            tip:'Si tes fesses ne touchent pas le sol, place un bloc yoga sous celle qui décolle. La symétrie viendra avec le temps.',
+            video: Y('90 90 hip switch lift off mobility') },
+          { id:'p1d1d', name:'Cossack Squat assisté', meta:['3 séries','5 reps/côté','2 sec tenu en bas'], targets:['Adducteurs','Flexion latérale','Cheville'], equip:'Bâton ou élastique au mur',
+            description:'Pieds larges (1.5× largeur d\'épaules), pointes vers l\'extérieur. Tiens un bâton vertical devant toi (point d\'appui). Descends latéralement sur une jambe en pliant le genou, l\'autre jambe reste tendue, pied à plat ou pointe vers le plafond. Tiens 2 sec en bas, remonte et change. 5 reps par côté.',
+            utility:'Travaille la mobilité de hanche en abduction extrême + adducteurs longs + cheville. C\'est la base du low single en MMA, des angles en boxe, et de la flexibilité latérale pour les kicks.',
+            video: Y('cossack squat technique mobility tutorial') },
+          { id:'p1d1e', name:'Frog Stretch + Bascules', meta:['12 bascules + 30 sec tenu'], targets:['Adducteurs profonds','Ouverture hanche'], equip:'Tapis',
+            description:'À quatre pattes, écarte les genoux au maximum (genoux à 90°), pieds tournés vers l\'extérieur, tibias à plat au sol. Bascule doucement les fesses vers l\'arrière (vers les talons) puis reviens vers l\'avant. 12 bascules lentes (3 sec dans chaque sens), puis tiens la position basse 30 sec. Avant-bras au sol, respire profondément.',
+            utility:'Ouvre la capsule articulaire de la hanche en abduction profonde. Critique pour le butterfly guard en MMA, le pas lateral en boxe thaï, et la base du squat sumo.',
+            video: Y('frog stretch tutorial deep') },
+          
+          { section:'Dissociation' },
+          { id:'p1d1f', name:'Open Book + Respiration', meta:['6 reps/côté','3 sec tenu','Respiration 4-6'], targets:['Rotation thoracique','Dissociation thorax/bassin'],
+            description:'Allongé sur le côté, genoux pliés à 90° devant toi (empilés), bras tendus devant à hauteur d\'épaules. Le bras du dessus s\'ouvre lentement vers l\'arrière en suivant la main du regard. Le bassin et les genoux NE BOUGENT PAS. Inspire 4 sec en revenant, expire 6 sec en ouvrant, tiens 3 sec en rotation max. 6 reps par côté.',
+            utility:'Apprend à ton thoracique à tourner indépendamment du bassin. C\'est LA base de la frappe puissante (boxe thaï), de l\'esquive (rotation tronc sans bouger les pieds), et du déhanché (bassin tourne pendant que les épaules restent face).',
+            tip:'Si ton thoracique ne tourne pas, ce sont tes lombaires qui prennent toute la rotation = douleur garantie. Cet exercice protège ton dos.',
+            video: Y('open book thoracic rotation stretch') }
+        ]},
+        
+        { id:'d2', name:'Psoas + Antérieur', focus:'Renforcement psoas iliaque + chaîne antérieure dynamique — résolution douleurs sprint',
+          exercises:[
+            { section:'Activation' },
+            { id:'p1d2a', name:'Marche talon-fesse + montée genou', meta:['30 sec/exercice','2 rounds'], targets:['Échauffement dynamique'],
+              description:'Sur place ou avancer : 30 sec talon vers la fesse en alternance, puis 30 sec montée genou alternée à hauteur de hanche. Rythme modéré, pose le pied entièrement. 2 rounds.',
+              utility:'Active les fléchisseurs de hanche et les ischio-jambiers à basse intensité avant le travail spécifique. Prépare la transmission de force chaîne antérieure/postérieure.',
+              video: Y('high knees butt kicks warm up') },
+            
+            { section:'Renforcement Psoas' },
+            { id:'p1d2b', name:'Psoas March allongé', meta:['3×10 reps/jambe','Lent 3-1-3'], targets:['Psoas','Iliaque','Contrôle moteur'], equip:'Tapis',
+              description:'Allongé sur le dos, genoux pliés à 90° en table top (genoux au-dessus des hanches). Bas du dos PLAQUÉ au sol (rétroversion active). Descends UN talon vers le sol en gardant le genou à 90° (jambe se déplie un peu). Touche le sol du talon (3 sec descente), tiens 1 sec, remonte (3 sec). Ne JAMAIS laisser le bas du dos décoller. 10 reps par jambe.',
+              utility:'C\'est LE renforcement du psoas iliaque pour résoudre tes douleurs au sprint. Le psoas n\'a pas besoin d\'être étiré (étiré il l\'est déjà chez toi vu ta lordose), il a besoin d\'apprendre à se contracter avec un bassin stable. Cet exercice change la donne.',
+              tip:'Si tu sens que ton bas du dos décolle, recommence avec moins d\'amplitude. Mieux vaut 5 reps parfaites que 10 médiocres.',
+              video: Y('dead bug heel slide psoas activation') },
+            { id:'p1d2c', name:'Standing Knee Hug + Hold haut', meta:['3×8 reps/jambe','5 sec tenu en haut'], targets:['Psoas isométrique','Stabilité unilatérale'],
+              description:'Debout sur une jambe. Lève l\'autre genou vers la poitrine et attrape-le avec les deux mains, tire-le contre toi. Lâche les mains et tiens le genou en l\'air à la même hauteur (au-dessus de l\'horizontale) pendant 5 sec, sans incliner le tronc. La hanche d\'appui doit rester verrouillée, pas de flexion latérale. Repose le pied. 8 reps par jambe.',
+              utility:'Travaille la force du psoas dans la position où tu en as besoin pour le sprint et le high kick — flexion de hanche au-dessus de 90°. La phase isométrique sans les mains est ce qui crée le transfert vers les sports.',
+              video: Y('standing knee hug hold psoas') },
+            { id:'p1d2d', name:'Couch Stretch + Activation fessier', meta:['2×40 sec/côté','Squeeze fessier 5 sec'], targets:['Psoas étirement','Fessier réciproque'], equip:'Mur ou canapé + bloc yoga',
+              description:'Genou arrière contre un mur (sur un bloc plié pour le confort), tibia vertical, pied au mur. Pied avant à plat devant, genou 90°. Torse droit, bassin en rétroversion. CONTRACTE LA FESSE ARRIÈRE pendant 5 sec, relâche, tiens la position 35 sec. La contraction du fessier inhibe le psoas par réciprocité.',
+              utility:'Étire le psoas TOUT EN apprenant à activer le fessier qui devrait normalement faire le travail d\'extension. Si ton fessier dort, ton psoas reste raccourci en permanence — d\'où les douleurs sprint.',
+              tip:'Trop intense ? Recule du mur. Le but est 7/10, pas 10/10.',
+              video: Y('couch stretch glute activation tutorial') },
+            
+            { section:'Intégration dynamique' },
+            { id:'p1d2e', name:'Banded Hip Flexor Drill', meta:['3×10 reps/jambe','Tempo 2-1-2'], targets:['Psoas dynamique','Sprint pattern'], equip:'Élastique moyen',
+              description:'Élastique attaché à un point bas (pied du canapé, base du mur), accroche l\'autre extrémité autour de ta cheville. Recule pour mettre tension. La jambe avec l\'élastique tire vers l\'arrière (résistance au début). Lève le genou rapidement vers la hanche (2 sec), tiens 1 sec en haut, redescends contrôlé (2 sec). Le tronc reste droit, pas de flexion latérale.',
+              utility:'Reproduit le pattern de SPRINT sous résistance — c\'est la transition entre force isolée et application sportive. Si tu as des douleurs au sprint, c\'est cet exercice qui va les résoudre en 4-6 semaines.',
+              video: Y('banded hip flexor drill standing') }
+        ]},
+        
+        { id:'d3', name:'Unilatéral + Chaîne post.', focus:'Stabilité jambe + ischio-jambiers + grip de pied',
+          exercises:[
+            { section:'Activation' },
+            { id:'p1d3a', name:'Foam Roll Ischio + Mollets', meta:['1 min/groupe'], equip:'Foam roller',
+              description:'Assis, jambe sur le foam roller, mains derrière pour soutien. Roule lentement de l\'arrière du genou jusqu\'au-dessous des fessiers (ischio), puis du tendon d\'Achille jusqu\'au-dessous du genou (mollets). Insiste sur les points denses.',
+              utility:'Désactive temporairement les zones tendues pour permettre une meilleure amplitude pendant le travail. Améliore l\'efficacité des étirements actifs qui suivent.',
+              video: Y('foam roll hamstrings calves') },
+            { id:'p1d3b', name:'Activation pied + cheville', meta:['10 reps × 3 mvt'], targets:['Pied actif','Stabilité base'],
+              description:'Pieds nus. 10 montées sur la pointe des pieds (talons décollent en même temps). 10 montées sur les talons (pointes décollent). 10 grips d\'orteils (essaie d\'attraper le sol avec tes orteils, sans bouger les jambes). Sur place, debout.',
+              utility:'Le pied est ta connexion au sol — base absolue de toute stabilité unilatérale. Pour le combat et la salsa, un pied "endormi" = perte d\'équilibre garantie.',
+              video: Y('foot activation toe yoga short foot') },
+            
+            { section:'Stabilité unilatérale' },
+            { id:'p1d3c', name:'Single Leg Stand — Yeux fermés', meta:['3×30 sec/jambe','Yeux ouverts puis fermés'], targets:['Proprioception','Stabilité statique'],
+              description:'Debout sur une jambe, l\'autre légèrement levée devant toi. Tiens 30 sec yeux ouverts. Puis ferme les yeux et tiens 30 sec (ou jusqu\'à perte d\'équilibre). 3 séries par jambe. Mains sur les hanches.',
+              utility:'En fermant les yeux, tu retires l\'info visuelle et forces ton système proprioceptif (oreille interne + capteurs articulaires) à compenser. C\'est exactement ce dont tu as besoin pour les changements rapides de direction au combat et en salsa.',
+              tip:'Note ta progression : combien de secondes yeux fermés sans bouger ? Cible : 30+ sec à la fin du programme.',
+              video: Y('single leg stand eyes closed proprioception') },
+            { id:'p1d3d', name:'Single Leg RDL — Tempo lent', meta:['3×8 reps/jambe','Tempo 4-2-1','PDC'], targets:['Ischio unilatéral','Stabilité dynamique'],
+              description:'Debout sur une jambe, l\'autre légèrement décollée derrière. Hinge aux hanches : pousse les fesses vers l\'arrière, le tronc descend en parallèle, la jambe arrière monte alignée avec le tronc. Bras pendants ou tendus latéralement. Descends 4 sec, tiens 2 sec en bas, remonte 1 sec. La jambe au sol reste légèrement fléchie. 8 reps par jambe.',
+              utility:'Combine ischio-jambiers, fessier, et stabilité unilatérale dans le pattern hip hinge — c\'est la base du Romanian deadlift, du sprawl en MMA, et du contrôle d\'équilibre après un kick.',
+              tip:'Pose un bloc yoga devant pour t\'aider à mesurer la profondeur — touche-le légèrement avec les doigts si possible.',
+              video: Y('single leg romanian deadlift bodyweight slow') },
+            
+            { section:'Chaîne postérieure' },
+            { id:'p1d3e', name:'Jefferson Curl PDC', meta:['8 reps','Tempo 5-0-5','Sur bloc'], targets:['Mobilité segmentaire','Ischio dynamique'], equip:'Bloc yoga ou marche',
+              description:'Debout sur un bloc yoga ou une marche (10-15 cm). Pieds joints. Menton vers la poitrine, déroule vertèbre par vertèbre vers le bas. Les mains descendent le long des jambes. Descends aussi loin que possible SANS forcer. 5 sec descente, 5 sec montée. Jambes quasi tendues (micro-flexion OK).',
+              utility:'L\'exercice n°1 pour rééduquer ton système nerveux et le convaincre que la flexion antérieure complète est SÛRE. Le déroulé segmentaire débloque chaque vertèbre une à une — c\'est ce qui permet de toucher tes orteils à terme.',
+              tip:'Note où arrivent tes mains. Sem 1 : tibias. Sem 8 : sol ou très proche. Photo de profil pour comparer.',
+              video: Y('jefferson curl bodyweight tutorial') },
+            { id:'p1d3f', name:'Pancake assisté', meta:['2×60 sec','Avec respiration'], targets:['Adducteurs','Ischio','Hanche ouverte'], equip:'Mur',
+              description:'Assis au sol contre un mur (dos plat contre le mur), jambes écartées au maximum, genoux tendus, pieds en dorsiflexion (tirés vers toi). Le mur force le bassin en antéversion. Penche le tronc vers l\'avant aussi loin que possible. Mains au sol ou attrape un pied. 2 séries de 60 sec, respire profondément, à chaque expiration relâche un peu plus.',
+              utility:'Travaille la flexion antérieure jambes écartées — combine ouverture de hanche, étirement adducteurs longs et chaîne postérieure. Base pour le grappling au sol et les positions ouvertes en MMA.',
+              video: Y('pancake stretch wall straddle') }
+        ]},
+        
+        { id:'d4', name:'Flow & Combat (Opt)', focus:'Flow combat / overhead / récup active',
+          exercises:[
+            { section:'Mobilité dynamique' },
+            { id:'p1d4a', name:'World\'s Greatest Stretch', meta:['5 reps/côté','Fluide'], targets:['Hanche','Thoracique','Cheville','Ischio'],
+              description:'Séquence 4 temps : 1) Fente avant droite, genou arrière au sol. 2) Main gauche au sol à l\'intérieur du pied droit, coude vers le sol (2 sec). 3) Bras droit tourne vers le plafond, suis la main du regard (3 sec). 4) Tends la jambe avant (fesses vers le ciel), pieds au sol (3 sec). Reviens en fente, change de côté. 5 reps/côté.',
+              utility:'Si tu ne devais garder qu\'UN exercice de mobilité, ce serait celui-ci. Il touche TOUTES tes zones problématiques en un seul flow : psoas, ischio, adducteurs, rotation thoracique, cheville. Échauffement parfait avant n\'importe quelle séance.',
+              video: Y('worlds greatest stretch flow') },
+            { id:'p1d4b', name:'Cat-Cow Spinal Wave', meta:['10 cycles lent'], targets:['Mobilité spinale segmentaire'],
+              description:'À quatre pattes. Initie une vague du sacrum vers la tête : rétroversion lombaire → flexion thoracique → flexion cervicale. Puis inverse : extension cervicale → extension thoracique → antéversion lombaire. Lent et fluide, comme une onde. 10 cycles complets.',
+              utility:'Réveille la mobilité segmentaire vertèbre par vertèbre — débloque les zones figées de ta colonne. Améliore la conscience corporelle et la dissociation des segments spinaux pour la rotation en combat.',
+              video: Y('spinal wave cat cow segmental') },
+            
+            { section:'Préparation overhead' },
+            { id:'p1d4c', name:'Wall Slide + Décollement', meta:['3×10 reps','Lent'], targets:['Mobilité scapulaire','Extension thoracique'], equip:'Mur',
+              description:'Dos contre le mur, pieds à 20 cm du mur. Tête, dos et fesses au mur. Bras en "cactus" (coudes 90°, avant-bras verticaux), dos des mains et coudes contre le mur. Glisse les bras vers le haut jusqu\'à extension complète. Le défi : garder TOUT en contact avec le mur. Si en haut tu y arrives, décolle les mains 2 sec.',
+              utility:'Évalue et améliore la mobilité scapulaire et l\'extension thoracique — base de l\'OH squat, du clinch en boxe thaï, et de la stabilité d\'épaule en push-press.',
+              tip:'Si tu n\'arrives pas à garder le contact, c\'est ton info pour savoir où travailler. Pas un échec.',
+              video: Y('wall slide angel scapular mobility') },
+            { id:'p1d4d', name:'Bâton Pass-Through', meta:['3×10 reps','Plus large possible'], targets:['Mobilité épaule','Rotation externe'], equip:'Bâton',
+              description:'Debout, tiens un bâton à deux mains avec une prise large devant toi (paumes vers le sol). Sans plier les coudes, passe le bâton par-dessus ta tête jusqu\'à ce qu\'il arrive derrière tes fesses. Reviens. Plus la prise est étroite, plus c\'est difficile. Trouve la prise où tu peux à peine passer.',
+              utility:'Mesure et améliore la mobilité d\'épaule en flexion + extension. Indispensable pour overhead squat propre, kicks par-dessus la tête, et défense haute en boxe.',
+              tip:'À chaque séance, essaie de réduire la largeur de prise de 1-2 cm. C\'est mesurable et motivant.',
+              video: Y('shoulder pass through dowel mobility') },
+            
+            { section:'Récup' },
+            { id:'p1d4e', name:'Pigeon Pose tenu', meta:['90 sec/côté'], targets:['Rotateurs externes','Fessiers'],
+              description:'À quatre pattes. Amène le genou droit vers ton poignet droit, tibia parallèle à la ligne d\'épaules (ou angle plus fermé pour moins d\'intensité). Étends la jambe gauche derrière toi (cuisse au sol). Garde les hanches carrées (face au sol, pas inclinées). Tiens 90 sec, respire profondément, à chaque expiration descends le tronc un peu plus vers l\'avant.',
+              utility:'Étirement profond du piriforme et des rotateurs externes de hanche — zones qui te limitent dans la rotation interne et qui se contractent après les sports impact (course, saut).',
+              tip:'Si ton genou avant fait mal, remonte le tibia plus vertical (genou plus proche de la hanche). Ne JAMAIS forcer sur le genou.',
+              video: Y('pigeon pose hip mobility') }
+        ]}
+      ]
     },
-    {
-      id: 'p2', name: 'Phase 2', label: 'Sem 3-4', weeks: [3,4],
-      morning: {
-        exercises: [
-          { id:'p2m1', name:'Cat-Cow Segmentaire + Cercles bassin', meta:['50 sec','6 CC + 4 cercles/sens'], targets:['Colonne complète','Mobilité pelvienne'], instructions:'Cat-Cow lent et segmentaire (6 cycles). Puis cercles de bassin à quatre pattes : 4 dans chaque sens. Explore les amplitudes extrêmes.' },
-          { id:'p2m2', name:'90/90 + Lift-Off', meta:['90 sec','6 transitions + 3 lift-off/côté'], targets:['Rotation hanche active','Force dans l\'amplitude'], instructions:'6 transitions 90/90. Puis reste d\'un côté : décolle le genou arrière du sol de 2-3 cm, tiens 5 sec. Même 1 cm compte. 3 reps/côté.', video:'https://www.youtube.com/results?search_query=90+90+lift+off+hip+mobility+active' },
-          { id:'p2m3', name:'Deep Squat libre + Rotation', meta:['70 sec','2×25 sec + rotations'], targets:['Flexion hanche','Rotation thoracique sous charge'], instructions:'Squat profond SANS assistance. 25 sec tenu. Puis rotations thoraciques : un bras au sol, l\'autre vers le plafond, 5 reps/côté. 2 séries.' },
-          { id:'p2m4', name:'Jefferson Curl — Sur marche haute', meta:['50 sec','5 reps','Tempo 5-0-5-0'], targets:['Chaîne postérieure','Mobilité segmentaire'], instructions:'Sur marche de 15-20 cm. Les mains devraient descendre plus bas que les pieds. Si tu atteins le niveau des pieds : tes gains sont réels.' }
-        ]
-      },
-      evening: {
-        days: [
-          { id:'d1', name:'LUN', fullName:'Lundi', focus:'Hanches Intensifié',
-            exercises: [
-              { id:'p2e1d1a', name:'Squat Cosaque — KB contrepoids', meta:['2 min 30','6 reps/côté','3 sec tenu'], targets:['Adducteurs en charge','Flexion hanche unilatérale'], equip:'KB 8-12 kg', instructions:'Sans assistance, KB devant la poitrine comme contrepoids. Le KB aide à descendre plus bas. Objectif : fesse au talon.', video:'https://www.youtube.com/results?search_query=cossack+squat+kettlebell+counterbalance' },
-              { id:'p2e1d1b', name:'Frog Stretch — Tenu prolongé', meta:['2 min 30','8 bascules + 40 sec tenu'], targets:['Adducteurs profonds','Ouverture amplifiée'], equip:'Élastique optionnel', instructions:'Position Frog, genoux plus loin qu\'en Phase 1. Élastique autour des genoux optionnel. 8 bascules puis 40 sec tenu, avant-bras au sol.' },
-              { id:'p2e1d1c', name:'90/90 + Inclinaison avec KB', meta:['2 min 30','50 sec/côté + 10 sec incliné'], targets:['Rotation externe profonde','Piriforme sous charge'], equip:'KB 4-8 kg', instructions:'Position 90/90, inclinaison vers l\'avant avec KB devant la poitrine. Le poids pousse l\'amplitude. Ou bras tendus, cherche avant-bras au sol.' },
-              { id:'p2e1d1d', name:'Goblet Squat Prying', meta:['2 min 30','2×50 sec','10 sec repos'], targets:['Flexion hanche sous charge','Adducteurs actifs'], equip:'KB 12-16 kg', instructions:'Squat profond avec KB en Goblet. Utilise les coudes pour pousser les genoux (prying). Bouge de droite à gauche, explore les angles.', tip:'Le Goblet Squat Prying de Dan John est l\'un des meilleurs exercices pour un squat profond fonctionnel.', video:'https://www.youtube.com/results?search_query=goblet+squat+prying+Dan+John+kettlebell' }
-            ]
-          },
-          { id:'d2', name:'MAR', fullName:'Mardi', focus:'Chaîne Post. Intensifié',
-            exercises: [
-              { id:'p2e1d2a', name:'Jefferson Curl — KB léger', meta:['3 min','6 reps','Tempo 5-2-5-0'], targets:['Érecteurs sous charge','Ischio-jambiers sous charge'], equip:'KB 4-8 kg', instructions:'Sur marche, KB tenu à deux mains. Commence à 4 kg. 5 sec descente, 2 sec pause en bas, 5 sec montée. NE JAMAIS ALLER EN DOULEUR.', tip:'À charge légère et tempo contrôlé, c\'est un des meilleurs pour créer de la résilience en flexion du dos.', video:'https://www.youtube.com/results?search_query=jefferson+curl+weighted+kettlebell+mobility' },
-              { id:'p2e1d2b', name:'Ischio PNF — Élastique', meta:['3 min','6 cycles/jambe','5 sec + 3 sec'], targets:['Ischio-jambiers','PNF optimisé'], equip:'Élastique long', instructions:'Élastique autour du pied. Tire vers toi, contraction 5 sec contre l\'élastique, relâche 3 sec, gagne amplitude. 6 cycles/jambe. Gain de 5-10° vs Phase 1.' },
-              { id:'p2e1d2c', name:'RDL Pattern — Stick', meta:['2 min','8 reps','Tempo 4-2-4-0'], targets:['Hip hinge pattern','Dissociation hanche/lombaire'], equip:'Stick en bois', instructions:'Stick contre le dos (3 contacts : tête, dos, sacrum). Pousse les fesses vers l\'arrière, dos droit. Descends jusqu\'à sentir l\'étirement. Si tu perds un contact : tu arrondis.', tip:'Le stick te donne un feedback immédiat. Ce drill t\'apprend à hinger aux hanches au lieu d\'arrondir le dos.', video:'https://www.youtube.com/results?search_query=romanian+deadlift+dowel+stick+hip+hinge+pattern' },
-              { id:'p2e1d2d', name:'Forward Fold — Genoux tendus', meta:['2 min','2×50 sec'], targets:['Chaîne postérieure maximale','Test progression'], instructions:'Genoux complètement tendus. Contracte les quadriceps pour l\'inhibition réciproque des ischio-jambiers. Respire et relâche.' }
-            ]
-          },
-          { id:'d3', name:'MER', fullName:'Mercredi', focus:'Extension Hanche Intensifié',
-            exercises: [
-              { id:'p2e1d3a', name:'Hip Flexor + Bras levé + Inclinaison', meta:['3 min','3 cycles PNF/côté'], targets:['Psoas profond','Carré des lombes','Obliques'], equip:'Bloc yoga', instructions:'Position half-kneeling, bassin vers l\'avant. Lève le bras du côté arrière au-dessus de la tête, incline-toi vers le côté opposé. PNF 5 sec puis pousse plus loin. 3 cycles/côté.', video:'https://www.youtube.com/results?search_query=half+kneeling+hip+flexor+overhead+reach+lateral+lean' },
-              { id:'p2e1d3b', name:'Couch Stretch — Torse vertical + PNF', meta:['3 min','2×45 sec/côté'], targets:['Extension hanche maximale','Rectus femoris profond'], instructions:'Couch Stretch avec torse complètement vertical. Contracte la fesse 5 sec (PNF), relâche, gagne l\'amplitude. Sensations 7/10 max.' },
-              { id:'p2e1d3c', name:'Single Leg Glute Bridge', meta:['2 min','8 reps/jambe + 15 sec tenu'], targets:['Fessier unilatéral','Stabilité pelvienne','Anti-rotation lombaire'], instructions:'Bridge une seule jambe. L\'autre tendue en l\'air ou genou vers la poitrine. 8 reps (3 sec squeeze) + 15 sec tenu par jambe.', video:'https://www.youtube.com/results?search_query=single+leg+glute+bridge+hold+technique' },
-              { id:'p2e1d3d', name:'Prone Press-Up + Rotation', meta:['2 min','8 press-up + 5 rot/côté'], targets:['Extension lombaire','Rotation en extension'], instructions:'8 McKenzie Press-Ups. En position haute, tourne le torse pour regarder par-dessus l\'épaule. 5 reps/côté.' }
-            ]
-          },
-          { id:'d4', name:'JEU', fullName:'Jeudi', focus:'Thoracique Intensifié',
-            exercises: [
-              { id:'p2e1d4a', name:'Open Book + Respiration segmentaire', meta:['3 min','6 reps/côté + 10 sec tenu'], targets:['Rotation thoracique maximale','Relâchement tissulaire'], instructions:'Open Book Phase 1. En rotation max : 3 respirations profondes, pousse plus loin à chaque expiration. Fin : 10 sec tenu en ouverture maximale chaque côté.' },
-              { id:'p2e1d4b', name:'Rotation thoracique — Stick', meta:['2 min 30','8 reps/côté','2 sec tenu'], targets:['Rotation thoracique isolée','Feedback proprioceptif'], equip:'Stick en bois', instructions:'À genoux (assis sur talons), stick sur les épaules. Tourne le torse au maximum à droite (2 sec) puis à gauche. Le bassin reste face avant. Le stick montre l\'amplitude réelle.', video:'https://www.youtube.com/results?search_query=kneeling+thoracic+rotation+stick+dowel' },
-              { id:'p2e1d4c', name:'Extension thoracique sur KB', meta:['2 min 30','10 ext + 20 sec tenu'], targets:['Extension thoracique','Mobilisation T5-T12'], equip:'KB ou serviette roulée', instructions:'Allongé, KB retourné sous le milieu du dos (omoplates). Mains derrière la tête. Laisse le haut du dos s\'étendre par-dessus. 10 reps + 20 sec tenu. Le bas du dos NE BOUGE PAS.', video:'https://www.youtube.com/results?search_query=thoracic+extension+foam+roller+mobilization' },
-              { id:'p2e1d4d', name:'Wall Slide + Décollement', meta:['2 min','8 reps + 15 sec tenu'], targets:['Force en extension thoracique','Scapulaire actif'], instructions:'Wall Slide Phase 1, mais après chaque montée, décolle les mains du mur de 2-3 cm, tiens 2 sec. Si impossible en haut : fais-le à mi-hauteur.' }
-            ]
-          },
-          { id:'d5', name:'VEN', fullName:'Vendredi', focus:'Flow Intensifié',
-            exercises: [
-              { id:'p2e1d5a', name:'World\'s Greatest Stretch — Tempo lent', meta:['4 min','4 reps/côté','5 sec/position'], targets:['Intégration complète','Amplitude maximale'], instructions:'Même séquence Phase 1, mais 5 sec par position. Plus lent = plus profond. En rotation : bras plus haut et plus loin. En jambe tendue : mains à plat au sol.' },
-              { id:'p2e1d5b', name:'Inchworm + Deep Squat + Rotation', meta:['3 min','5 reps'], targets:['Chaîne postérieure','Squat profond','Rotation en position basse'], instructions:'Phase 1 + en squat profond, ajoute rotation thoracique : bras droit vers le plafond (3 sec), bras gauche (3 sec). Remonte et recommence.' },
-              { id:'p2e1d5c', name:'Shinbox Get-Up — Sans les mains', meta:['3 min','5 reps/côté'], targets:['Force dans l\'amplitude','Contrôle moteur avancé'], instructions:'Position 90/90 : lève-toi SANS les mains. Monte debout, redescends en contrôlant, change de côté. Les mains peuvent toucher pour l\'équilibre mais ne portent pas de poids.', video:'https://www.youtube.com/results?search_query=shinbox+get+up+no+hands+hip+mobility' }
-            ]
-          }
-        ]
-      }
+    
+    // ============= PHASE 2 - SEM 3-4 : CHARGE LÉGÈRE =============
+    { id:'p2', name:'Phase 2', label:'Sem 3-4', weeks:[3,4], desc:'Charge légère & dynamique',
+      days: [
+        { id:'d1', name:'Hanches 3D', focus:'Rotation chargée + déhanché actif',
+          exercises:[
+            { section:'Activation' },
+            { id:'p2d1a', name:'Foam Roll + Hip Airplane', meta:['1 min FR + 6 reps/côté'], equip:'Foam roller',
+              description:'Foam roll fessiers et IT band 1 min/côté comme en Phase 1. Puis Hip Airplane : debout sur une jambe, tronc penché vers l\'avant (parallèle au sol), bras en T. Garde la position et tourne la hanche d\'appui pour ouvrir le tronc vers le ciel (rotation externe), puis le refermer (rotation interne). 6 rotations par jambe.',
+              utility:'Le Hip Airplane combine stabilité unilatérale + rotation contrôlée de la hanche d\'appui. Échauffement parfait pour tout ce qui suit + transfert direct au pivot en boxe et au déhanché en salsa.',
+              video: Y('hip airplane drill') },
+            
+            { section:'Travail principal' },
+            { id:'p2d1b', name:'90/90 Loaded + Lift Off chargé', meta:['8 trans + 5 lift/côté','Avec haltère 2kg'], targets:['Rotation sous charge'], equip:'Haltère 2 kg',
+              description:'Position 90/90, mais cette fois tiens un haltère 2kg sur ta poitrine (ou les deux haltères, un dans chaque main). 8 transitions. Puis reste d\'un côté, place l\'haltère sur le genou arrière et soulève-le de 2-3 cm pendant 3 sec. 5 lift-off par côté.',
+              utility:'Ajouter une charge même légère force le système nerveux à recruter PLUS de fibres dans l\'amplitude — c\'est ce qui crée le transfert vers les sports. La charge transforme la mobilité passive en force fonctionnelle.',
+              video: Y('weighted 90 90 hip switch') },
+            { id:'p2d1c', name:'Cossack Squat avec KB', meta:['3×6/côté','3 sec tenu'], targets:['Adducteurs sous charge','Cheville'], equip:'KB 8 kg',
+              description:'Pieds larges, KB en position goblet (devant la poitrine, deux mains). Descends latéralement sur une jambe, l\'autre tendue. Le KB sert de contrepoids et t\'aide à descendre plus profond et rester droit. Tiens 3 sec en bas. 6 reps par côté.',
+              utility:'Le KB transforme cet exercice de mobilité en exercice de force end-range. Tu construis de la force dans les amplitudes maximales — exactement ce qu\'il faut pour les low kicks et les angles agressifs en boxe.',
+              video: Y('cossack squat kettlebell goblet') },
+            { id:'p2d1d', name:'Banded Lateral Walk', meta:['3×15 pas/côté','Position basse'], targets:['Moyen fessier','Stabilité latérale'], equip:'Élastique léger',
+              description:'Élastique autour des chevilles ou au-dessus des genoux. Demi-squat (cuisses légèrement au-dessus de l\'horizontale), tronc droit. Marche latéralement de 15 pas en gardant la tension de l\'élastique constante (pas de "snap back"). Change de direction. 3 séries par côté.',
+              utility:'Active le moyen fessier qui contrôle le déhanché latéral et la stabilité du bassin. Sans moyen fessier fort, ton bassin s\'effondre à chaque appui sur une jambe — pas de salsa ni de kick stable possible.',
+              video: Y('banded lateral walk monster walk') },
+            
+            { section:'Dissociation' },
+            { id:'p2d1e', name:'Seated Thoracic Rotation + Bâton', meta:['3×8/côté','3 sec tenu'], targets:['Rotation thoracique pure'], equip:'Bâton',
+              description:'Assis au sol, jambes croisées en tailleur. Place le bâton sur tes épaules derrière la nuque, mains aux extrémités. Garde le bassin TOTALEMENT immobile (la position en tailleur t\'aide à le verrouiller). Tourne le tronc à droite jusqu\'au max, tiens 3 sec, puis à gauche. 8 reps par côté.',
+              utility:'Le bâton donne un feedback visuel sur ton amplitude réelle. La position assise verrouille le bassin et force la rotation à venir UNIQUEMENT du thoracique — c\'est exactement ce qu\'il te faut pour la frappe en boxe et la dissociation en salsa.',
+              video: Y('seated thoracic rotation dowel') }
+          ]},
+        
+        { id:'d2', name:'Psoas + Antérieur', focus:'Psoas dynamique chargé + dissociation',
+          exercises:[
+            { section:'Activation' },
+            { id:'p2d2a', name:'Marche dynamique 3 plans', meta:['30 sec × 3'], targets:['Échauffement multi-plan'],
+              description:'30 sec genoux hauts (plan sagittal), 30 sec pas chassés latéraux (plan frontal), 30 sec carioca / pas croisés (plan transversal). 1 round.',
+              utility:'Active la chaîne antérieure dans les 3 plans de mouvement avant le travail spécifique. Prépare le système nerveux à la coordination multi-directionnelle requise en combat.',
+              video: Y('multidirectional warm up athlete') },
+            
+            { section:'Renforcement Psoas' },
+            { id:'p2d2b', name:'Dead Bug + Élastique tête', meta:['3×8/côté','Lent'], targets:['Psoas + anti-extension'], equip:'Élastique + ancrage',
+              description:'Allongé sur le dos, élastique attaché derrière ta tête (à un pied de meuble). Tiens l\'élastique avec les deux mains, bras tendus au-dessus de toi (l\'élastique tire vers la tête = il faut résister). Genoux table top. Bas du dos PLAQUÉ. Étends UNE jambe à 5 cm du sol pendant 3 sec, ramène. Alterne. 8 reps par jambe.',
+              utility:'Combine renforcement psoas + activation core anti-extension. L\'élastique force ton core à empêcher tes lombaires de cambrer — c\'est exactement le pattern dont tu as besoin en sprint pour ne PAS surcharger ton dos.',
+              video: Y('dead bug overhead band tension') },
+            { id:'p2d2c', name:'Banded Hip Flexor March', meta:['3×12 reps/jambe','Tempo rapide en haut'], targets:['Psoas dynamique','Sprint pattern'], equip:'Élastique moyen',
+              description:'Élastique attaché au sol (point d\'ancrage bas), accroche autour de ta cheville. Recule pour mettre tension. Lève le genou rapidement vers la hanche (1 sec — explosif), tiens 1 sec en haut, redescends contrôlé (2 sec). Tronc droit, pas d\'inclinaison latérale. 12 reps par jambe.',
+              utility:'Reproduit le pattern de sprint à pleine vitesse sous charge. La phase rapide en haut entraîne la contraction explosive du psoas — c\'est ce qui résout les douleurs sprint et augmente ta vitesse de teep / kick.',
+              tip:'Charge plus lourde si tu as fini la Phase 1 sans douleur. La progression vient de la vitesse + résistance.',
+              video: Y('banded hip flexor march sprint') },
+            { id:'p2d2d', name:'Couch Stretch + PNF actif', meta:['3 cycles/côté','Contraction 5s + 25s tenu'], targets:['Psoas profond + activation'], equip:'Mur + bloc',
+              description:'Position Couch Stretch, torse vertical. CONTRACTE LE PSOAS pendant 5 sec en essayant de tirer le genou arrière vers l\'avant (résistance par ta position). Puis CONTRACTE LE FESSIER 5 sec. Puis tiens passivement 25 sec en cherchant plus d\'amplitude. 3 cycles par côté.',
+              utility:'PNF (Proprioceptive Neuromuscular Facilitation) — la méthode la plus efficace prouvée scientifiquement pour gagner de l\'amplitude. Contracter le muscle étiré + son antagoniste = signal au système nerveux que cette amplitude est SÛRE.',
+              video: Y('couch stretch PNF contract relax') },
+            
+            { section:'Intégration combat' },
+            { id:'p2d2e', name:'Standing Knee Raise + Rotation', meta:['3×8/jambe','Lent contrôlé'], targets:['Psoas + dissociation'],
+              description:'Debout sur une jambe, lève l\'autre genou à hauteur de hanche. Maintenant TOURNE le genou vers l\'extérieur (rotation externe de hanche, comme pour un teep latéral) puis ramène-le au centre. Tiens chaque position 1 sec. Le tronc reste DROIT et FACE devant — la rotation vient uniquement de la hanche levée. 8 reps par jambe.',
+              utility:'Reproduit le pattern de teep et de chambering pour le roundhouse kick — flexion de hanche + rotation externe. Si tu maîtrises ça, tes kicks seront propres et puissants dès tes premières séances de boxe thaï.',
+              video: Y('teep kick chamber drill psoas') }
+          ]},
+        
+        { id:'d3', name:'Unilatéral + Chaîne post.', focus:'Stabilité chargée + ischio fort',
+          exercises:[
+            { section:'Activation' },
+            { id:'p2d3a', name:'Foam Roll Postérieur complet', meta:['30 sec/zone'], equip:'Foam roller',
+              description:'Roule successivement : ischio (30s/jambe), mollets (30s/jambe), bas du dos très lentement (30s — léger), haut du dos / thoracique (30s — focus extension).',
+              utility:'Prépare toute la chaîne postérieure pour le travail à venir et améliore la qualité tissulaire — la chaîne post est ton réservoir d\'énergie élastique pour les sprints et les sauts.',
+              video: Y('foam roll posterior chain complete') },
+            
+            { section:'Stabilité unilatérale' },
+            { id:'p2d3b', name:'Single Leg Stand + Élastique perturbation', meta:['3×30 sec/jambe','Élastique sur le tronc'], targets:['Proprioception réactive'], equip:'Élastique + ancrage',
+              description:'Debout sur une jambe, élastique passé autour de ton tronc (juste sous les aisselles), attaché à un point fixe latéral (poignée porte ou pied de meuble lourd). L\'élastique te tire de côté en permanence — tu dois résister sans bouger le pied. Change de côté pour chaque jambe pour varier la direction de tirage.',
+              utility:'Crée une perturbation constante que tu dois compenser sans bouger — c\'est l\'entraînement direct de la stabilité réactive nécessaire dans le clinch en MMA et après l\'impact d\'un kick.',
+              video: Y('single leg balance band perturbation') },
+            { id:'p2d3c', name:'Pistol Squat regression', meta:['3×5/jambe','Box ou banc'], targets:['Force unilatérale','Mobilité cheville'], equip:'Banc/chaise',
+              description:'Debout sur une jambe devant une chaise/banc, l\'autre jambe tendue devant toi (parallèle au sol). Descends doucement et touche la chaise du derrière (3 sec descente), puis remonte (1 sec). Bras tendus devant pour contrepoids. Si trop dur, descends moins bas (chaise plus haute). Si trop facile, chaise plus basse. 5 reps par jambe.',
+              utility:'Le pistol partial est l\'exercice n°1 pour la force unilatérale. Améliore force quad, mobilité cheville, équilibre. Transfert direct vers la jambe d\'appui en kicks et la stabilité après les esquives en boxe.',
+              video: Y('pistol squat box assisted progression') },
+            
+            { section:'Chaîne postérieure' },
+            { id:'p2d3d', name:'Single Leg RDL avec KB', meta:['3×8/jambe','KB main opposée'], targets:['Ischio + stabilité'], equip:'KB 8 kg',
+              description:'Debout sur la jambe gauche, KB dans la main droite (main opposée à la jambe d\'appui = travail anti-rotation). Hinge aux hanches : KB descend le long de la jambe, jambe droite monte alignée avec le tronc. 4 sec descente, 1 sec en bas, 2 sec remonte. 8 reps puis change.',
+              utility:'Le KB contralatéral force ton core à empêcher la rotation du tronc. Combine ischio en charge + anti-rotation + stabilité — pattern athlétique total qui se retrouve dans presque tous les sports.',
+              video: Y('single leg romanian deadlift kettlebell contralateral') },
+            { id:'p2d3e', name:'Jefferson Curl avec haltères 2kg', meta:['8 reps','Tempo 5-2-5','Sur bloc'], targets:['Mobilité chargée','Résilience colonne'], equip:'2 haltères 2 kg + bloc',
+              description:'Sur le bloc yoga ou marche, un haltère 2kg dans chaque main. Déroule comme en Phase 1 mais avec la charge. 5 sec descente, 2 sec en bas, 5 sec montée. Les haltères descendent SOUS le niveau des pieds.',
+              utility:'Renforce la chaîne postérieure dans la flexion vertébrale chargée — crée une colonne RÉSILIENTE plutôt que rigide. Critique pour les sports où ton dos doit absorber des charges et des chocs (lutte, halté).',
+              tip:'2 kg c\'est suffisant. La progression vient du tempo et de l\'amplitude, pas du poids.',
+              video: Y('jefferson curl light dumbbell mobility') }
+          ]},
+        
+        { id:'d4', name:'Flow & Combat (Opt)', focus:'Combat flow + récup',
+          exercises:[
+            { section:'Flow' },
+            { id:'p2d4a', name:'Crawls (Beast + Crab)', meta:['3×30 sec','15 sec repos'], targets:['Coordination cross-body','Core'],
+              description:'Beast crawl : à quatre pattes, genoux à 5 cm du sol, avance en cross-body (main droite + pied gauche ensemble). 30 sec. Repos 15s. Crab crawl : assis face au plafond, mains et pieds au sol, fesses surélevées. Avance et recule en cross-body. 30 sec. Repos 15s. Alterne 3 rounds.',
+              utility:'Les crawls réactivent les patterns cross-body fondamentaux que tu utilises en MMA pour le scrambling, en lutte pour les transitions, et en boxe pour la coordination main/pied opposés.',
+              video: Y('beast crab crawl ido portal animal flow') },
+            { id:'p2d4b', name:'Shinbox Get-Up', meta:['4 reps/côté','Sans les mains'], targets:['Force amplitude hanche','Transitions'],
+              description:'Position 90/90 au sol. Lève-toi SANS utiliser les mains (les mains peuvent toucher le sol pour l\'équilibre mais ne portent pas de poids). Monte en chevalier servant, puis debout. Redescends en contrôlant, change de côté. 4 reps par côté.',
+              utility:'Force directement applicable au combat : se relever vite après une chute, transition guard/debout, protection après un take down. Plus athlétique que tu ne le crois.',
+              video: Y('shinbox get up no hands turkish') },
+            
+            { section:'Overhead' },
+            { id:'p2d4c', name:'OH Bâton Squat', meta:['3×5','Tempo 3-1-3'], targets:['Mobilité OH','Squat profond'], equip:'Bâton',
+              description:'Tiens le bâton au-dessus de la tête, prise large (plus large que les épaules, paumes vers le ciel quand tu pousses). Descends en squat profond en gardant le bâton DIRECTEMENT au-dessus du milieu du pied (pas devant). 3 sec descente, 1 sec en bas, 3 sec montée. 5 reps.',
+              utility:'Test n°1 de mobilité globale (cheville + hanche + thoracique + épaule) et préparation directe à l\'overhead squat. Si tu réussis ça avec un bâton léger, l\'OH squat barre vide arrivera vite.',
+              video: Y('overhead squat dowel mobility test') },
+            
+            { section:'Récup' },
+            { id:'p2d4d', name:'Lizard Pose dynamique', meta:['90 sec/côté','Avec rocking'], targets:['Hanche + adducteurs'],
+              description:'Position fente très basse, jambe avant pied à plat, genou aligné à 90°. Pose les avant-bras au sol à l\'intérieur du pied avant (lizard). Garde la jambe arrière tendue (genou décollé). Tiens 30 sec. Puis "rocking" : avance et recule lentement le bassin pendant 30 sec. Finis 30 sec en tenant la position basse.',
+              utility:'Étire profondément le psoas + adducteurs longs + rotateurs de hanche dans une position fonctionnelle. Le rocking permet une mobilisation active vs étirement passif — gains plus durables.',
+              video: Y('lizard pose deep hip stretch') }
+          ]}
+      ]
     },
-    {
-      id: 'p3', name: 'Phase 3', label: 'Sem 5-6', weeks: [5,6],
-      morning: {
-        exercises: [
-          { id:'p3m1', name:'Spinal Wave (Onde debout)', meta:['50 sec','8 vagues'], targets:['Mobilité segmentaire debout','Coordination neuro-musculaire'], instructions:'Debout, genoux fléchis. Vague du bassin vers la tête : rétroversion → flexion lombaire → thoracique → cervicale, puis inverse. Fluide, 5-6 sec par vague.', video:'https://www.youtube.com/results?search_query=standing+spinal+wave+mobility+flow' },
-          { id:'p3m2', name:'Shinbox Flow continu', meta:['90 sec','Transitions continues'], targets:['Mobilité hanche dynamique','Force rotationnelle'], instructions:'Transitions 90/90 enchaînées sans les mains, en flux continu. Lift-off du genou arrière à chaque passage. Zéro hésitation.' },
-          { id:'p3m3', name:'Deep Squat → Stand → Forward Fold', meta:['70 sec','6 cycles'], targets:['Flexion hanche','Chaîne postérieure','Transition dynamique'], instructions:'Squat profond (3 sec), tends les jambes (forward fold 3 sec), redescends en squat (3 sec), remonte debout. Continu. ~10 sec/cycle.' },
-          { id:'p3m4', name:'Jefferson Curl — KB sur marche', meta:['50 sec','4 reps','Tempo 5-3-5-0'], targets:['Chaîne postérieure sous charge','Force en flexion'], equip:'KB 4-8 kg', instructions:'Sur marche (15-20 cm) avec KB. 3 sec de pause en bas. Le KB devrait descendre bien sous les pieds. Contrôle total.' }
-        ]
-      },
-      evening: {
-        days: [
-          { id:'d1', name:'LUN', fullName:'Lundi', focus:'Hanches : Force end-range',
-            exercises: [
-              { id:'p3e1d1a', name:'Squat Cosaque — KB Goblet profond', meta:['2 min 30','5 reps/côté','5 sec tenu'], targets:['Adducteurs sous charge lourde','Force end-range'], equip:'KB 12-16 kg', instructions:'KB en Goblet, descends profond. 5 sec en bas. KB plus lourd = force dans l\'amplitude maximale. Objectif : fesse au talon.' },
-              { id:'p3e1d1b', name:'Horse Stance — Isométrique', meta:['2 min','3×30 sec','15 sec repos'], targets:['Adducteurs isométrique','Endurance amplitude','Stabilité bassin'], instructions:'Pieds très larges, pointes vers l\'extérieur. Squat sumo profond, cuisses parallèles ou plus bas. Torse droit, mains jointes. 3×30 sec.', video:'https://www.youtube.com/results?search_query=horse+stance+hold+adductor+strength' },
-              { id:'p3e1d1c', name:'90/90 PAILs/RAILs', meta:['3 min','2 cycles/côté'], targets:['Capsule articulaire','Contrôle neuro-musculaire','Gain permanent'], equip:'Bloc yoga', instructions:'Position 90/90 incliné (étirement max), 30 sec. PAILs : pousse le tibia avant dans le sol 10 sec (montée progressive à 70%). RAILs : tire le genou arrière du sol 10 sec. Relâche et gagne l\'amplitude.', tip:'PAILs/RAILs est la méthode gold standard pour des gains de mobilité permanents. Méthode FRC/Kinstretch.', video:'https://www.youtube.com/results?search_query=PAILs+RAILs+90+90+hip+FRC+kinstretch' },
-              { id:'p3e1d1d', name:'Goblet Squat Prying — KB lourd', meta:['2 min 30','2×50 sec'], targets:['Squat profond fonctionnel','Variabilité articulaire'], equip:'KB 16-20 kg', instructions:'KB plus lourd. En squat profond, déplace le poids de gauche à droite, explore les angles, arrondis puis recrée la lordose. Le squat profond doit devenir une position de repos.' }
-            ]
-          },
-          { id:'d2', name:'MAR', fullName:'Mardi', focus:'Chaîne Post. : Force amplitude',
-            exercises: [
-              { id:'p3e1d2a', name:'Jefferson Curl — KB progressif', meta:['3 min','5 reps','Tempo 5-3-5-0'], targets:['Force en flexion sous charge','Résilience vertébrale'], equip:'KB 8-12 kg', instructions:'Sur marche, KB plus lourd. Si tu touches sous les pieds avec 8 kg : transformation réussie. Ne jamais augmenter si tu perds le contrôle du tempo.' },
-              { id:'p3e1d2b', name:'RDL — KB unilatéral', meta:['3 min','6 reps/jambe','Tempo 4-2-4-0'], targets:['Ischio sous charge unilatérale','Stabilité/proprioception','Hip hinge fonctionnel'], equip:'KB 12-16 kg', instructions:'Sur une jambe, KB main opposée. Hinge aux hanches, KB descend le long de la jambe, jambe arrière monte. 2 sec pause en bas. Dos DROIT.', video:'https://www.youtube.com/results?search_query=single+leg+romanian+deadlift+kettlebell+technique' },
-              { id:'p3e1d2c', name:'Ischio PNF — Amplitude max', meta:['2 min','4 cycles/jambe'], targets:['Amplitude maximale ischio','PNF avancé'], equip:'Élastique long', instructions:'Même technique PNF, mais la jambe devrait approcher 80-90° (verticale ou proche). 4 cycles de haute qualité par jambe.' },
-              { id:'p3e1d2d', name:'Standing Pike — Test final', meta:['2 min','3×30 sec'], targets:['Test de progression','Amplitude maximale'], instructions:'Debout, pieds joints, genoux tendus. Cherche à toucher le sol avec les paumes. Compare avec ton point de départ. 3×30 sec, plus loin à chaque série.' }
-            ]
-          },
-          { id:'d3', name:'MER', fullName:'Mercredi', focus:'Extension Hanche : Consolidation',
-            exercises: [
-              { id:'p3e1d3a', name:'Half-Kneeling Pallof Press', meta:['3 min','8 reps/côté','3 sec tenu'], targets:['Psoas en extension','Anti-rotation lombaire','Core fonctionnel'], equip:'Élastique', instructions:'Fente au sol, élastique ancré latéralement. Pousse les bras droit devant (anti-rotation), 3 sec bras tendus. Serre la fesse arrière. 8 reps/côté.', video:'https://www.youtube.com/results?search_query=half+kneeling+pallof+press+anti+rotation' },
-              { id:'p3e1d3b', name:'Couch Stretch — Mains levées', meta:['2 min 30','50 sec/côté'], targets:['Extension hanche maximale','Chaîne antérieure complète'], instructions:'Couch Stretch, torse vertical, les deux bras levés au-dessus de la tête. Augmente l\'extension de hanche et recrute toute la chaîne antérieure.' },
-              { id:'p3e1d3c', name:'KB Swing — Focus extension', meta:['2 min 30','3×10 swings','20 sec repos'], targets:['Extension hanche explosive','Activation fessiers puissante','Transfert sport'], equip:'KB 12-16 kg', instructions:'KB Swing classique, focus sur l\'extension COMPLÈTE en haut. Squeeze les fesses au max, bassin poussé vers l\'avant. Pas d\'hyper-extension lombaire.', video:'https://www.youtube.com/results?search_query=kettlebell+swing+hip+extension+glute+focus' },
-              { id:'p3e1d3d', name:'Prone Press-Up — Tenu maximal', meta:['2 min','6 reps + 30 sec tenu'], targets:['Extension lombaire complète','Santé discale'], instructions:'McKenzie Press-Up bras complètement tendus si possible. 6 reps lentes + 30 sec tenu, respire profondément.' }
-            ]
-          },
-          { id:'d4', name:'JEU', fullName:'Jeudi', focus:'Thoracique : Force et contrôle',
-            exercises: [
-              { id:'p3e1d4a', name:'Rotation thoracique — Élastique', meta:['3 min','8 reps/côté','3 sec tenu'], targets:['Rotation thoracique en force','Obliques','Transfert sport'], equip:'Élastique', instructions:'À genoux, élastique ancré latéralement. Tourne le torse en tirant l\'élastique du côté opposé. 3 sec en rotation max. 8 reps/côté.', video:'https://www.youtube.com/results?search_query=banded+thoracic+rotation+kneeling+resistance' },
-              { id:'p3e1d4b', name:'KB Pullover au sol', meta:['2 min 30','8 reps + 15 sec tenu','Tempo 4-2-4-0'], targets:['Extension thoracique sous charge','Flexion épaule','Grand dorsal'], equip:'KB 8-12 kg', instructions:'Allongé, KB au-dessus de la poitrine. Descends derrière la tête en gardant les côtes basses. 4 sec descente, 2 sec pause, 4 sec montée. Puis 15 sec tenu.', video:'https://www.youtube.com/results?search_query=floor+pullover+kettlebell+thoracic+extension' },
-              { id:'p3e1d4c', name:'Thread the Needle + Push through', meta:['2 min 30','6 reps/côté','3 sec tenu'], targets:['Rotation thoracique en force','Serratus anterior'], instructions:'Thread the Needle, en ouverture max : pousse le bras vers le plafond le plus loin possible pendant 3 sec. Travail de FORCE en rotation.' },
-              { id:'p3e1d4d', name:'Wall Slide — Lent + Isométrique', meta:['2 min','6 reps + 3 pauses iso 5 sec'], targets:['Force extension thoracique','Stabilité scapulaire avancée'], instructions:'Wall Slide ultra lent (6 sec montée, 6 sec descente). À mi-hauteur, en haut, et en cactus : décolle les mains 5 sec.' }
-            ]
-          },
-          { id:'d5', name:'VEN', fullName:'Vendredi', focus:'Flow : Performance',
-            exercises: [
-              { id:'p3e1d5a', name:'World\'s Greatest Stretch — Rotation poussée', meta:['4 min','4 reps/côté','5 sec/position'], targets:['Intégration totale','Expression des gains'], instructions:'Chaque position tenue 5 sec avec intention maximale. En rotation : bras aussi loin que possible. En jambe tendue : mains au sol. Version "master".' },
-              { id:'p3e1d5b', name:'Flow libre : Squat → Fente → 90/90 → Get-Up', meta:['3 min','Continu'], targets:['Mobilité fonctionnelle libre','Créativité motrice','Confiance amplitude'], instructions:'Enchaîne librement : squat profond → fente → sol en 90/90 → shinbox get-up → debout → recommence. Pas de schéma fixe, explore.' },
-              { id:'p3e1d5c', name:'Shinbox Get-Up → Overhead Press', meta:['3 min','4 reps/côté'], targets:['Force toute amplitude','Stabilité complète','Transfert Hyrox/CrossFit'], equip:'KB 8-12 kg', instructions:'Shinbox Get-Up avec KB dans une main (côté genou avant). Lève-toi, fais un Overhead Press en haut. Redescends, change de côté.', tip:'Si tu fais ça proprement avec 12 kg, tu as une qualité athlétique que 95% des pratiquants n\'ont pas.', video:'https://www.youtube.com/results?search_query=shinbox+get+up+kettlebell+overhead+press' }
-            ]
-          }
-        ]
-      }
+    
+    // ============= PHASE 3 - SEM 5-6 : FORCE END-RANGE =============
+    { id:'p3', name:'Phase 3', label:'Sem 5-6', weeks:[5,6], desc:'Force end-range & dissociation',
+      days: [
+        { id:'d1', name:'Hanches 3D', focus:'PAILs/RAILs + déhanché chargé',
+          exercises:[
+            { section:'Activation' },
+            { id:'p3d1a', name:'Hip CARs (Controlled Articular Rotations)', meta:['3 cercles/sens/jambe','Très lent'], targets:['Capsule articulaire','Conscience'],
+              description:'À quatre pattes (ou debout sur une jambe). Lève une jambe et fais le PLUS GRAND CERCLE possible avec le genou en gardant le tronc immobile. Très lent (~10 sec par cercle). Le genou monte vers la poitrine, s\'ouvre vers l\'extérieur, descend, ferme vers l\'intérieur. 3 cercles dans chaque sens, par jambe.',
+              utility:'Les CARs sont la signature de la méthode FRC (Functional Range Conditioning) — le système le plus avancé en mobilité. Améliorent la santé de la capsule articulaire et révèlent les zones de blocage. À faire en début de chaque séance hanche dès maintenant.',
+              video: Y('hip CARs FRC functional range') },
+            
+            { section:'PAILs/RAILs' },
+            { id:'p3d1b', name:'90/90 PAILs/RAILs', meta:['2 cycles/côté','10s contraction × 2'], targets:['Capsule hanche','Force end-range','Permanent'], equip:'Bloc yoga',
+              description:'Position 90/90 inclinée vers l\'avant (étirement maximal), 30 sec passif. Puis PAILs : pousse le tibia avant DANS LE SOL pendant 10 sec en montant progressivement à 70% d\'effort. RAILs : tire activement le genou arrière du sol pendant 10 sec. Relâche, gagne l\'amplitude. 2 cycles par côté.',
+              utility:'PAILs/RAILs (Progressive Angular Isometric Loading) — méthode gold standard pour des gains de mobilité PERMANENTS. Tu signales au système nerveux que cette amplitude est sûre ET tu construis de la force dedans. Beaucoup plus efficace que le stretching passif.',
+              tip:'Cycle clé du programme. Si tu ne devais en garder qu\'un, ce serait celui-ci.',
+              video: Y('90 90 PAILs RAILs FRC kinstretch') },
+            { id:'p3d1c', name:'Cossack Squat + Pause + KB', meta:['3×5/côté','5 sec tenu en bas'], targets:['Force end-range adducteurs'], equip:'KB 8 kg',
+              description:'Cossack squat avec KB en goblet, mais cette fois TIENS 5 SEC en bas (au lieu de 3). En bas, déplace le poids très lentement de gauche à droite, explore la position. 5 reps par côté.',
+              utility:'5 secondes en position end-range chargée = stimulation maximale du système nerveux pour accepter cette amplitude comme "normale". Crée la mobilité "owned" — celle qui reste même sans pratique régulière.',
+              video: Y('cossack squat hold pause kettlebell') },
+            
+            { section:'Dissociation' },
+            { id:'p3d1d', name:'Cuban Hip Walk', meta:['2×30 sec/sens'], targets:['Dissociation pelvienne','Salsa'],
+              description:'Debout, genoux légèrement fléchis. Marche en avant en exagérant le déhanché : à chaque pas, pousse activement la hanche du côté du pied qui avance vers le côté. Les épaules restent FACE devant, ne tournent pas. Tronc neutre. 30 sec en avant, 30 sec en arrière. 2 séries.',
+              utility:'EXACTEMENT le pattern de la salsa cubaine et du déhanché en boxe (slip / esquive rotative). Force la dissociation hanche/épaule — l\'inverse exact de comment ton corps bouge quand tu es raide.',
+              tip:'Filme-toi de profil pour voir ton amplitude réelle. Tu seras surpris.',
+              video: Y('cuban hip walk salsa drill mobility') },
+            { id:'p3d1e', name:'Open Book + Élastique', meta:['3×6/côté','Avec résistance'], targets:['Rotation thoracique forte'], equip:'Élastique',
+              description:'Position Open Book classique, mais tiens l\'élastique avec la main du dessus (l\'autre extrémité est fixée au sol près du bassin). En ouvrant le bras vers l\'arrière, tu travailles CONTRE la résistance de l\'élastique. Pause 3 sec en rotation max. 6 reps par côté.',
+              utility:'Construit de la FORCE en rotation thoracique end-range — c\'est ce qui permet de générer de la puissance dans les frappes circulaires (crochet, hook kick) et dans les rotations rapides en MMA.',
+              video: Y('banded open book thoracic rotation') }
+          ]},
+        
+        { id:'d2', name:'Psoas + Antérieur', focus:'Psoas explosif + sprint pattern',
+          exercises:[
+            { section:'Activation' },
+            { id:'p3d2a', name:'A-Skip + B-Skip', meta:['2×20m chacun'], targets:['Pattern sprint','Coordination'],
+              description:'A-Skip : alterne montée de genou + petit saut sur la jambe d\'appui, contact court avec le sol. B-Skip : ajoute une extension de la jambe levée vers l\'avant + griffé du sol vers l\'arrière. Avance lentement. 2× 20m de chaque drill.',
+              utility:'Drills classiques de sprint qui réactivent le pattern de course pure : flexion explosive de hanche + extension active. Réveille les chaînes nerveuses spécifiques à la vitesse.',
+              video: Y('a skip b skip sprint drill') },
+            
+            { section:'Renforcement explosif' },
+            { id:'p3d2b', name:'Banded Sprint Drive', meta:['3×8/jambe','Explosif'], targets:['Psoas explosif','Vitesse contraction'], equip:'Élastique fort',
+              description:'Élastique attaché bas, autour de la cheville. Tronc légèrement penché en avant (position de sprint). Lève le genou EXPLOSIVEMENT vers la hanche (1 sec), tiens 1 sec, redescends contrôlé (2 sec). Garde le tronc fixe, ne te redresse pas. 8 reps par jambe.',
+              utility:'Reproduit la première phase de chaque foulée de sprint. Construit la PUISSANCE explosive du psoas — c\'est ce qui te permet d\'accélérer rapidement et de chambrer un kick à toute vitesse.',
+              video: Y('sprint drive band hip flexor power') },
+            { id:'p3d2c', name:'Hanging Knee Raise', meta:['3×8 reps','Lent contrôlé'], targets:['Psoas haut + core'], equip:'Barre traction (à 2min)',
+              description:'À ta barre de traction. Suspendu, prise pronation, scapulae actives (épaules basses, pas haussées). Lève les genoux vers la poitrine (2 sec), tiens 1 sec, descends LENTEMENT (3 sec). PAS DE BALANCEMENT. Si tu tournes, recommence. 8 reps.',
+              utility:'Le gold standard du renforcement psoas dans la flexion complète de hanche, en suspension. Combine force psoas + grip + scap stability — package complet pour le combat.',
+              tip:'Si trop dur, plie d\'abord les genoux puis lève-les ensemble (versus tendus). Progresse vers les knees-to-elbows à terme.',
+              video: Y('hanging knee raise strict') },
+            { id:'p3d2d', name:'Couch Stretch + Levée KB', meta:['2×40 sec/côté','KB 2-4 kg'], targets:['Psoas chargé','Antéversion contrôlée'], equip:'KB 8 kg ou haltère 2 kg',
+              description:'Position couch stretch torse vertical. Tiens un KB (ou haltère 2kg) à deux mains au-dessus de la tête, bras tendus. Garde les côtes basses (anti-extension). Cette charge OH augmente l\'extension de hanche par étirement de la chaîne antérieure complète. Tiens 40 sec.',
+              utility:'Charge la chaîne antérieure complète (psoas + droit fémoral + abdos profonds + grand dorsal). Excellente prep overhead + déblocage psoas en simultané.',
+              video: Y('couch stretch overhead reach') },
+            
+            { section:'Intégration combat' },
+            { id:'p3d2e', name:'Standing Roundhouse Chamber', meta:['3×8/jambe','Lent + contrôle'], targets:['Pattern kick complet'],
+              description:'Debout sur la jambe gauche. Chambre la jambe droite : pied passe par la cheville opposée → genou monte sur le côté à hauteur d\'épaule (rotation externe + abduction + flexion) → tiens 2 sec → redescends en passant par le même chemin (3 sec). 8 reps puis change.',
+              utility:'Tu construis le PATTERN MOTEUR du roundhouse kick AVANT même de le faire en boxe thaï. Quand tu reprendras, tu auras déjà 6 semaines d\'avance sur ton coach.',
+              tip:'Tiens-toi à un mur ou un meuble si tu perds l\'équilibre. La technique d\'abord.',
+              video: Y('roundhouse kick chamber drill slow') }
+          ]},
+        
+        { id:'d3', name:'Unilatéral + Chaîne post.', focus:'Force unilatérale chargée + flow',
+          exercises:[
+            { section:'Activation' },
+            { id:'p3d3a', name:'Foam Roll Postérieur + Mob cheville', meta:['1 min FR + 10 reps cheville/côté'], equip:'Foam roller',
+              description:'Foam roll chaîne postérieure 1 min/zone. Puis demi-fente avant, genou avant pousse vers l\'avant par-dessus les orteils (sans décoller le talon). 10 reps lentes par côté.',
+              utility:'La cheville est SOUVENT le facteur limitant en pistol et en squat profond. La mobiliser avant d\'attaquer = amplitude max disponible.',
+              video: Y('ankle mobility lunge dorsiflexion') },
+            
+            { section:'Stabilité chargée' },
+            { id:'p3d3b', name:'Single Leg Stand + Élastique multi-direction', meta:['3×30 sec/jambe','Yeux fermés ½ temps'], targets:['Stabilité réactive max'], equip:'Élastique + ancrage',
+              description:'Comme en P2 mais : 15 sec yeux ouverts, 15 sec yeux fermés. Bouge l\'élastique entre les sets pour avoir des perturbations dans des directions variées (devant, derrière, côté).',
+              utility:'Combine perturbation externe + retrait info visuelle = entraînement maximal du système proprioceptif. Si tu maîtrises ça, tu ne perdras plus jamais l\'équilibre dans un clinch.',
+              video: Y('single leg stability eyes closed band') },
+            { id:'p3d3c', name:'Pistol Squat partiel + KB', meta:['3×5/jambe','KB 8 kg goblet'], targets:['Force unilatérale chargée'], equip:'KB 8 kg + banc',
+              description:'Pistol partial sur banc, mais avec KB en goblet position. Le KB sert de contrepoids et de charge en même temps. Descends en 4 sec, touche le banc, remonte en 1 sec. 5 reps par jambe.',
+              utility:'Augmente la difficulté du pistol en ajoutant une charge antérieure. Le KB t\'aide à descendre droit et travaille les anti-extensors core en plus de la jambe.',
+              video: Y('pistol squat goblet kettlebell box') },
+            
+            { section:'Chaîne postérieure forte' },
+            { id:'p3d3d', name:'Single Leg RDL + 2 KB', meta:['3×6/jambe','2 KB sur les côtés'], targets:['Ischio max + équilibre'], equip:'2 KB 8 kg',
+              description:'SL RDL avec 1 KB dans chaque main, le long du corps (pas devant). Hinge complet : tronc parallèle au sol, jambe arrière alignée. 4 sec descente, 1 sec en bas, 2 sec montée. Jambe d\'appui légèrement fléchie. 6 reps par jambe.',
+              utility:'Avec 16 kg total répartis, tu construis une chaîne postérieure forte ET stable sur une jambe — combinaison explosive pour la performance athlétique générale.',
+              video: Y('single leg RDL double kettlebell') },
+            { id:'p3d3e', name:'Jefferson Curl + Gilet lesté', meta:['8 reps','Tempo 5-3-5','Sur bloc'], targets:['Mobilité chargée max'], equip:'Gilet lesté + bloc',
+              description:'Sur le bloc, gilet lesté (5-10 kg). Jefferson curl strict comme avant, avec la charge ajoutée par le gilet. 5 sec descente, 3 sec en bas (PAUSE LONGUE — c\'est là que la magie opère), 5 sec remontée. 8 reps.',
+              utility:'Le gilet ajoute une charge axiale (vs charge antérieure des haltères) — différent stress sur la colonne, plus proche du transfert vers les charges quotidiennes. Crée une colonne ULTRA résiliente.',
+              tip:'Si douleur, redescends à 5 kg. Si confortable à 10 kg pendant 2 séances, tu peux tester avec haltères en plus — mais reste prudent.',
+              video: Y('jefferson curl weighted vest') }
+          ]},
+        
+        { id:'d4', name:'Flow & Combat (Opt)', focus:'Combat flow avancé',
+          exercises:[
+            { section:'Flow' },
+            { id:'p3d4a', name:'Animal Flow chain', meta:['3×45 sec','15 sec repos'], targets:['Coordination','Force fonctionnelle'],
+              description:'Enchaîne fluidement : Beast → Side Kick Through (passe une jambe sous l\'autre, fesses face au plafond) → Crab → Ape (squat sumo en saut latéral) → retour Beast. 45 sec de flow, 15 sec repos. 3 rounds.',
+              utility:'Le flow combine TOUT : mobilité + force + coordination + cardio. C\'est la quintessence de la "préparation au mouvement" qui rend ton corps adaptable à n\'importe quel sport.',
+              video: Y('animal flow basic chain ido portal') },
+            { id:'p3d4b', name:'Cossack to Cossack flow', meta:['10 transitions','Lent fluide'], targets:['Hanche dynamique'],
+              description:'Position cossack profond gauche → transfert lentement le poids vers la droite SANS te lever, en passant par un demi-squat profond → arrive en cossack droit. La hanche balaie de gauche à droite en restant basse. 10 transitions fluides.',
+              utility:'Crée des hanches "fluides" capables de transférer le poids latéralement sans rupture. Pattern direct utilisé en lutte (level change) et en boxe (slipping).',
+              video: Y('cossack to cossack flow hip mobility') },
+            
+            { section:'Overhead' },
+            { id:'p3d4c', name:'OH Squat avec haltères 2kg', meta:['3×5','Tempo 3-2-3'], targets:['Mobilité OH chargée'], equip:'2 haltères 2 kg',
+              description:'Tiens un haltère dans chaque main, bras tendus au-dessus de la tête, plus large que les épaules. Descends en squat profond en gardant les haltères directement au-dessus du milieu du pied. 3 sec descente, 2 sec en bas, 3 sec montée. 5 reps.',
+              utility:'L\'OH squat avec charge légère force la stabilité scapulaire et l\'extension thoracique active sous tension — exactement ce qu\'il faut avant de passer à la barre olympique.',
+              video: Y('overhead squat dumbbells light') },
+            
+            { section:'Récup' },
+            { id:'p3d4d', name:'Yin Pigeon Pose', meta:['2 min/côté'], targets:['Étirement profond passif'],
+              description:'Position pigeon classique. Mais cette fois, abandonne-toi complètement : tronc face au sol ou avant-bras au sol (pas le dos rond). 2 minutes complètes par côté. Respire profondément, à chaque expiration relâche un peu plus.',
+              utility:'L\'approche Yin (tenue très longue à intensité modérée) cible le tissu conjonctif (fascia + capsule articulaire) plutôt que le muscle. Différent stimulus, gains permanents complémentaires.',
+              video: Y('yin pigeon pose long hold') }
+          ]}
+      ]
+    },
+    
+    // ============= PHASE 4 - SEM 7-8 : INTÉGRATION COMBAT =============
+    { id:'p4', name:'Phase 4', label:'Sem 7-8', weeks:[7,8], desc:'Intégration combat & overhead',
+      days: [
+        { id:'d1', name:'Hanches 3D', focus:'Mobilité fonctionnelle combat-spécifique',
+          exercises:[
+            { section:'Activation' },
+            { id:'p4d1a', name:'Hip CARs + Spine CARs', meta:['3 cercles/sens','Lent maximal'], targets:['Capsule articulaire complète'],
+              description:'Hip CARs (Phase 3) puis Spine CARs : à quatre pattes, fais le plus grand cercle possible avec ta tête, lentement, en suivant ton regard. Imagine que tu dessines un cercle géant avec le sommet de ton crâne. 3 cercles dans chaque sens. Mobilise toute la colonne, pas juste le cou.',
+              utility:'Combine les deux CARs majeures — hanche et colonne. Routine d\'évaluation et d\'entretien à garder à VIE après ce programme.',
+              video: Y('spine CARs FRC neck') },
+            
+            { section:'Force 3D chargée' },
+            { id:'p4d1b', name:'Cossack KB + Hold long', meta:['3×4/côté','8 sec tenu en bas','Avec rotation'], targets:['Force end-range + transitions'], equip:'KB 8 kg',
+              description:'Cossack squat avec KB goblet. Descends, tiens 8 sec en bas — pendant la pause, fais 2 rotations thoraciques (KB devant la poitrine, tourne le tronc à droite et à gauche). Remonte. 4 reps par côté.',
+              utility:'Combine 3 capacités end-range : adducteurs + cheville + rotation thoracique en charge. Pattern athlétique avancé qui transfère DIRECTEMENT au combat au sol et aux esquives basses.',
+              video: Y('cossack squat hold rotation kettlebell') },
+            { id:'p4d1c', name:'Hip Airplane + Élastique', meta:['3×6/côté','Lent contrôlé'], targets:['Stabilité unilatérale + rotation'], equip:'Élastique au mur',
+              description:'Hip airplane comme en P2, mais cette fois élastique attaché à un mur, accroché à la jambe levée (élastique tire vers l\'arrière et le côté). Tu dois résister à la traction tout en effectuant les rotations contrôlées de la hanche d\'appui.',
+              utility:'L\'élastique perturbe ton équilibre = ton système proprioceptif s\'adapte ENCORE plus. Reproduit les forces externes que tu reçois en combat (poussée, accroche).',
+              video: Y('hip airplane band resistance') },
+            
+            { section:'Combat-spécifique' },
+            { id:'p4d1d', name:'Roundhouse Kick technique (lent)', meta:['3×5/jambe','Pause à chaque phase'], targets:['Pattern complet'],
+              description:'Décompose le roundhouse en 5 phases (très lent) : 1) Pivot pied d\'appui 90° vers l\'extérieur (1s). 2) Chambre genou côté + ouverture hanche (2s). 3) Extension jambe (kick) (1s). 4) Hold position end (2s). 5) Retour contrôlé (3s). 5 reps par jambe.',
+              utility:'Ton corps mémorise le pattern en pleine conscience. Quand tu reprendras la boxe thaï, ton coach ne pourra pas croire que tu n\'en as jamais fait avant.',
+              tip:'À faire devant un miroir si possible. La position end (kick complet en l\'air) est ce qui demande le plus de mobilité.',
+              video: Y('roundhouse kick slow technique mobility') },
+            { id:'p4d1e', name:'Cuban Hip + Tronc', meta:['2×40 sec','Avec dissociation tronc'], targets:['Salsa + rotation séparée'],
+              description:'Cuban hip walk comme en P3, mais cette fois ajoute des rotations OPPOSÉES du tronc : quand la hanche droite avance/sort, les épaules tournent vers la gauche, et inversement. Bras à 90° avec poings devant pour exagérer la sensation. 40 sec, change de sens. 2 séries.',
+              utility:'Dissociation maximale hanche/épaules — c\'est EXACTEMENT le pattern de la cuban motion en salsa et du hip turn en boxe pour les frappes puissantes.',
+              video: Y('cuban hip torso opposition salsa') }
+          ]},
+        
+        { id:'d2', name:'Psoas + Antérieur', focus:'Psoas applicable sport',
+          exercises:[
+            { section:'Activation' },
+            { id:'p4d2a', name:'Drill sprint complet', meta:['A-skip 20m + B-skip 20m + Stride 20m','×2'], targets:['Pattern sprint complet'],
+              description:'Combine A-skip → B-skip → strides (foulée de sprint à 70% intensité, 20m). 2 rounds complets avec 30 sec repos entre.',
+              utility:'Le combo A-skip/B-skip/stride réveille toute la chaîne de course et te prépare aux efforts à haute intensité du jour.',
+              video: Y('a skip b skip stride sprint warm up') },
+            
+            { section:'Force psoas applicable' },
+            { id:'p4d2b', name:'Toes-to-Bar progression', meta:['3×6 reps','Strict si possible'], targets:['Psoas + grip + core'], equip:'Barre traction',
+              description:'Suspendu à la barre, scapulae basses. Lève les jambes TENDUES (ou pliées si trop dur) jusqu\'à toucher la barre avec les pieds. Strict (pas de kipping). Descente lente (3 sec). 6 reps. Si impossible : commence avec genoux pliés, progresse vers L-sit hold, puis vers TTB.',
+              utility:'Le summum du renforcement psoas + core anti-extension + grip. Si tu peux faire 6 TTB strict, ton sprint et tes kicks seront radicalement différents.',
+              video: Y('toes to bar strict progression') },
+            { id:'p4d2c', name:'Sprint avec gilet lesté', meta:['4×30m','Repos 1 min'], targets:['Psoas explosif + cardio'], equip:'Gilet lesté 5-10 kg',
+              description:'Espace dehors ou couloir long. Avec gilet lesté 5-10 kg, fais 30m de sprint à 80-90% (pas pleine vitesse pour éviter les blessures). Repos 1 min (marche lente). 4 répétitions.',
+              utility:'Application réelle du travail des semaines précédentes. Le gilet augmente la résistance + la demande au psoas. C\'est le test : si tu n\'as plus mal, le programme a marché.',
+              tip:'Si douleur au psoas, arrête immédiatement et reste sur les autres exercices. Pas de héros.',
+              video: Y('weighted vest sprint training') },
+            { id:'p4d2d', name:'Dragon Pose', meta:['90 sec/côté','Active'], targets:['Psoas profond + flexion ext'],
+              description:'Position fente très basse, jambe avant à 90°, jambe arrière tendue (genou décollé du sol). Tronc relevé, mains sur le genou avant. Descends activement le bassin vers le sol en serrant la fesse arrière. Tiens 90 sec par côté.',
+              utility:'Étirement profond et actif du psoas + droit fémoral. Active la position end-range que tu utilises en sprint et en kick.',
+              video: Y('dragon pose deep hip flexor stretch') },
+            
+            { section:'Récup intégrée' },
+            { id:'p4d2e', name:'Diaphragm release + Breath', meta:['5 min','Allongé'], targets:['Diaphragme','Système nerveux'],
+              description:'Allongé sur le dos, genoux pliés, pieds au sol. Place les pouces sous les côtes (à la jonction côtes/diaphragme). Inspire profondément en gonflant le ventre, puis sur l\'expiration appuie GENTIMENT vers le haut sous les côtes. Mobilise tout le diaphragme. 5 minutes de respiration profonde + automassage.',
+              utility:'Le diaphragme est ATTACHÉ au psoas — un diaphragme tendu = un psoas tendu. Peu de gens le savent. Cet exercice est game-changer pour relâcher la chaîne antérieure profonde.',
+              video: Y('diaphragm release breathing psoas') }
+          ]},
+        
+        { id:'d3', name:'Unilatéral + Chaîne post.', focus:'Performance unilatérale max',
+          exercises:[
+            { section:'Activation' },
+            { id:'p4d3a', name:'Pied actif + Cheville lestée', meta:['1 min'], equip:'Gilet lesté optionnel',
+              description:'Pieds nus avec gilet lesté (optionnel). 30 sec montées sur pointes lentes (3 sec up, 3 sec down). 30 sec grip d\'orteils.',
+              utility:'Active la base sous charge — préparation maximale pour le travail unilatéral chargé qui suit.',
+              video: Y('weighted calf raise toe grip') },
+            
+            { section:'Stabilité maximale' },
+            { id:'p4d3b', name:'Single Leg avec gilet + Yeux fermés', meta:['3×45 sec/jambe','Yeux fermés'], targets:['Stabilité ultime'], equip:'Gilet lesté',
+              description:'Single leg stand avec gilet lesté 5-10 kg, yeux fermés. 45 sec par jambe. Bras croisés sur la poitrine pour augmenter le défi.',
+              utility:'Combine charge axiale + retrait info visuelle = test ultime de stabilité unilatérale. Si tu réussis, tu es plus stable que 99% des gens.',
+              video: Y('weighted single leg stand eyes closed') },
+            
+            { section:'Force unilatérale' },
+            { id:'p4d3c', name:'Pistol Squat full range', meta:['3×3-5/jambe','PDC ou contrepoids'], targets:['Force unilatérale max'], equip:'Haltère 2kg pour contrepoids si nécessaire',
+              description:'Tente le pistol squat complet : descends en squat sur une jambe, l\'autre tendue devant, fesses près du talon, sans toucher le sol. Bras tendus devant pour contrepoids (ou tiens un haltère 2kg pour faciliter). Remonte. 3-5 reps par jambe.',
+              utility:'Le pistol squat complet est le standard d\'or de la force unilatérale. Si tu y arrives, tu peux te dire que ta base athlétique pour le combat est solide.',
+              tip:'Si pas encore de pistol full, reste sur le partial sur banc avec amplitude maximale — c\'est largement suffisant.',
+              video: Y('pistol squat full range counterweight') },
+            
+            { section:'Chaîne postérieure performance' },
+            { id:'p4d3d', name:'Single Leg RDL Plyo', meta:['3×5/jambe','Réception contrôlée'], targets:['Ischio explosif'],
+              description:'SL RDL classique sans charge, mais explose vers le haut à la fin (le pied d\'appui décolle légèrement) et atterris sur la même jambe. Réception en flexion légère, contrôle. 5 reps par jambe. Apprend la propulsion + l\'amorti = base du sprint et des kicks.',
+              utility:'Combine ischio puissant + capacité d\'amortissement unilatéral. Pattern explosif qu\'on retrouve dans tous les changements de direction et les sauts d\'une jambe.',
+              video: Y('single leg romanian deadlift plyometric hop') },
+            { id:'p4d3e', name:'Jefferson Curl test final', meta:['1×10 reps','Tempo 5-2-5','Sur bloc + haltères'], targets:['Test progression chaîne post'], equip:'2 haltères 2 kg + bloc',
+              description:'Test final : Jefferson curl complet avec 2 haltères 2 kg, sur le bloc. Note où arrivent les haltères : sous les pieds (objectif), au niveau des pieds (bien), aux chevilles (encore possible). Compare avec ta toute première séance.',
+              utility:'Bilan officiel de ta progression chaîne postérieure sur 8 semaines. À photographier de profil.',
+              video: Y('jefferson curl benchmark test') }
+          ]},
+        
+        { id:'d4', name:'Flow & Combat (Opt)', focus:'Performance & test final',
+          exercises:[
+            { section:'Test final' },
+            { id:'p4d4a', name:'OH Squat avec KB unilatéral', meta:['3×5/côté','KB un bras tendu'], targets:['Test mobilité totale'], equip:'KB 8 kg',
+              description:'KB tenu à un bras au-dessus de la tête, bras complètement tendu, paume vers l\'avant. Descends en squat profond, KB reste au-dessus de toi en permanence. 5 reps par côté. C\'est l\'équivalent d\'un Turkish get-up partial — test ULTIME de mobilité globale.',
+              utility:'Combine cheville, hanche, thoracique, épaule, et stabilité scapulaire — TOUT le corps en une seule rep. Si tu y arrives proprement, tu as réussi le programme.',
+              video: Y('overhead squat single arm kettlebell') },
+            
+            { section:'Combat application' },
+            { id:'p4d4b', name:'Shadowbox Mobility Round', meta:['3×3 min','30 sec repos'], targets:['Application combat'],
+              description:'3 rounds de 3 minutes de shadow boxing en intégrant CONSCIEMMENT tous les patterns du programme : pivots de hanche pour les frappes circulaires, esquives basses (cossack-like), changements de niveau (squat profond), high kicks, level changes. Pas de cardio max — focus QUALITÉ du mouvement.',
+              utility:'L\'application directe de tout ce que tu as appris en contexte sport. Tu sentiras la différence immédiate par rapport à si tu avais shadowboxé sans ce programme.',
+              video: Y('shadow boxing mobility flow muay thai') },
+            { id:'p4d4c', name:'Turkish Get-Up complet', meta:['2×3/côté','KB 8 kg'], targets:['Stabilité totale + transitions'], equip:'KB 8 kg',
+              description:'Turkish Get-Up complet : allongé → assis → genou → debout → inverse. KB toujours tendu au-dessus de toi (regard sur le KB). Très lent, prend ton temps (environ 30 sec par rep). 3 reps par côté, 2 séries.',
+              utility:'L\'EXERCICE le plus complet qui existe. Stabilité d\'épaule + mobilité hanche + transitions sol/debout + force unilatérale + coordination. À garder dans ta routine post-programme.',
+              tip:'Si tu n\'as jamais fait de TGU, regarde une vidéo détaillée d\'abord et commence sans poids.',
+              video: Y('turkish get up complete kettlebell tutorial') },
+            
+            { section:'Récup finale' },
+            { id:'p4d4d', name:'Long Yin sequence', meta:['3 min × 3 poses'], targets:['Récup tissulaire profonde'],
+              description:'Tiens 3 minutes chaque pose : 1) Pigeon profond. 2) Lizard avec avant-bras au sol. 3) Frog ouvert. Total 9 minutes de tenue passive en respirant.',
+              utility:'Récupération tissulaire en mode Yin — cible le fascia et la capsule articulaire pour des gains permanents. Parfait pour clôturer le programme.',
+              video: Y('yin yoga hip sequence long hold') }
+          ]}
+      ]
     }
   ]
 };
 
 const TESTS = [
-  { id:'t1', name:'Forward Fold', desc:'Debout, pieds joints, genoux tendus. Mesure la distance doigts-sol en cm (positif = au-dessus du sol, négatif = en dessous).', unit:'cm', placeholder:'+15' },
-  { id:'t2', name:'Deep Squat Hold', desc:'Squat profond sans aide. Chronomètre la durée tenue (sec). Note si talons au sol et dos droit.', unit:'sec', placeholder:'30' },
-  { id:'t3', name:'Straight Leg Raise', desc:'Allongé sur le dos, lève une jambe tendue. Note l\'angle en degrés (utilise l\'appli mesure d\'angle). Moyenne des 2 jambes.', unit:'°', placeholder:'65' },
-  { id:'t4', name:'Douleur lombaire', desc:'Échelle de 0 (aucune douleur) à 10 (insupportable). Score moyen sur la semaine.', unit:'/10', placeholder:'6' }
+  { id:'t1', name:'Forward Fold (chaîne post.)', desc:'Debout pieds joints, genoux tendus, descends et mesure distance doigts-sol. Positif = au-dessus, négatif = en dessous.', unit:'cm', placeholder:'+15' },
+  { id:'t2', name:'Deep Squat Hold', desc:'Squat profond sans aide. Chronomètre la durée tenue (talons au sol, dos droit).', unit:'sec', placeholder:'30' },
+  { id:'t3', name:'Single Leg Stand yeux fermés', desc:'Sur une jambe, yeux fermés, mains sur les hanches. Note la durée tenue (moyenne des 2 jambes).', unit:'sec', placeholder:'15' },
+  { id:'t4', name:'Bâton Pass-Through', desc:'Largeur de prise minimum pour passer le bâton sans plier les coudes. Mesure entre les mains.', unit:'cm', placeholder:'90' },
+  { id:'t5', name:'Cossack Squat profondeur', desc:'Distance fesses-talon en bas du cossack. Plus c\'est petit, mieux c\'est. 0 = fesse au talon.', unit:'cm', placeholder:'15' },
+  { id:'t6', name:'Douleur psoas (sprint)', desc:'Échelle 0-10 après un sprint à 80%. 0 = aucune douleur.', unit:'/10', placeholder:'5' }
 ];
 
 // ============================================================
@@ -892,7 +1290,6 @@ const TESTS = [
 // ============================================================
 let state = {
   currentPhase: 0,
-  currentSession: 'morning',
   currentDay: 0,
   currentPage: 'workout',
   startDate: null,
@@ -902,7 +1299,7 @@ let state = {
 
 function loadState() {
   try {
-    const saved = localStorage.getItem('mobilite_state_v2');
+    const saved = localStorage.getItem('mob_v2_state');
     if (saved) {
       const parsed = JSON.parse(saved);
       state = { ...state, ...parsed };
@@ -916,43 +1313,37 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem('mobilite_state_v2', JSON.stringify(state));
+    localStorage.setItem('mob_v2_state', JSON.stringify(state));
   } catch(e) {}
 }
 
 function resetData() {
-  if (confirm('Effacer TOUTES les données ? Cette action est irréversible.')) {
-    localStorage.removeItem('mobilite_state_v2');
-    state = { currentPhase:0, currentSession:'morning', currentDay:0, currentPage:'workout', startDate:new Date().toISOString().split('T')[0], completed:{}, tests:{} };
+  if (confirm('Effacer TOUTES les données ? Action irréversible.')) {
+    localStorage.removeItem('mob_v2_state');
+    state = { currentPhase:0, currentDay:0, currentPage:'workout', startDate:new Date().toISOString().split('T')[0], completed:{}, tests:{} };
     saveState();
     renderAll();
   }
 }
 
-// ============================================================
-// HELPERS
-// ============================================================
 function getTodayStr() { return new Date().toISOString().split('T')[0]; }
 
 function getCurrentWeek() {
   const start = new Date(state.startDate);
   const today = new Date(getTodayStr());
   const diff = Math.floor((today - start) / (1000*60*60*24));
-  return Math.min(Math.floor(diff / 7) + 1, 6);
-}
-
-function getDayOfWeek() {
-  return new Date().getDay(); // 0=Sun,1=Mon...
+  return Math.min(Math.floor(diff / 7) + 1, 8);
 }
 
 function getPhaseForWeek(week) {
   if (week <= 2) return 0;
   if (week <= 4) return 1;
-  return 2;
+  if (week <= 6) return 2;
+  return 3;
 }
 
-function getCompletionKey(date, phaseIdx, session, dayIdx) {
-  return `${date}_p${phaseIdx}_${session}_d${dayIdx}`;
+function getCompletionKey(date, phaseIdx, dayIdx) {
+  return `${date}_p${phaseIdx}_d${dayIdx}`;
 }
 
 function isExerciseCompleted(key, exId) {
@@ -970,34 +1361,32 @@ function toggleExercise(key, exId) {
   saveState();
 }
 
-function getSessionExercises(phaseIdx, session, dayIdx) {
-  const phase = PROGRAM.phases[phaseIdx];
-  if (session === 'morning') return phase.morning.exercises;
-  return phase.evening.days[dayIdx].exercises;
+function getDayExercises(phaseIdx, dayIdx) {
+  return PROGRAM.phases[phaseIdx].days[dayIdx].exercises.filter(e => e.id);
 }
 
-function getSessionCompletionCount(date, phaseIdx, session, dayIdx) {
-  const key = getCompletionKey(date, phaseIdx, session, dayIdx);
-  const exs = getSessionExercises(phaseIdx, session, dayIdx);
+function getDayCompletion(date, phaseIdx, dayIdx) {
+  const key = getCompletionKey(date, phaseIdx, dayIdx);
+  const exs = getDayExercises(phaseIdx, dayIdx);
   const done = state.completed[key] || [];
   return { done: done.length, total: exs.length };
 }
 
-function isDateFullyComplete(date) {
-  const week = (() => {
-    const start = new Date(state.startDate);
-    const d = new Date(date);
-    return Math.min(Math.floor((d - start) / (1000*60*60*24*7)) + 1, 6);
-  })();
-  const phaseIdx = getPhaseForWeek(week);
-  const dow = new Date(date).getDay();
-  if (dow === 0 || dow === 6) return null;
-  const dayIdx = dow - 1;
-  const m = getSessionCompletionCount(date, phaseIdx, 'morning', 0);
-  const e = getSessionCompletionCount(date, phaseIdx, 'evening', dayIdx);
-  if (m.done === m.total && e.done === e.total) return 'done';
-  if (m.done > 0 || e.done > 0) return 'partial';
-  return 'none';
+// Check if a day was completed THIS WEEK (any date within the week)
+function isDayDoneThisWeek(phaseIdx, dayIdx) {
+  const today = new Date(getTodayStr());
+  const dayOfWeek = (today.getDay() + 6) % 7; // Monday = 0
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - dayOfWeek);
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const ds = d.toISOString().split('T')[0];
+    const c = getDayCompletion(ds, phaseIdx, dayIdx);
+    if (c.done === c.total && c.total > 0) return true;
+  }
+  return false;
 }
 
 // ============================================================
@@ -1005,8 +1394,8 @@ function isDateFullyComplete(date) {
 // ============================================================
 function renderAll() {
   renderHeader();
-  renderSessionToggle();
   renderDayTabs();
+  renderFocusBanner();
   renderExercises();
   renderStats();
   renderTests();
@@ -1018,117 +1407,88 @@ function renderHeader() {
   const phase = PROGRAM.phases[phaseIdx];
   document.getElementById('weekIndicator').textContent = `Sem ${week} · ${phase.name}`;
 
-  // Phase tabs
   const tabsHtml = PROGRAM.phases.map((p, i) => 
     `<button class="phase-tab ${i===state.currentPhase?'active':''}" onclick="setPhase(${i})">${p.label}</button>`
   ).join('');
   document.getElementById('phaseTabs').innerHTML = tabsHtml;
 
-  // Week progress (10 dots for 2 weeks × 5 days)
+  // Week progress: 4 days × 2 weeks = 8 dots for the phase
   const today = getTodayStr();
-  const start = new Date(state.startDate);
   let dotsHtml = '';
-  for (let w = state.currentPhase * 2; w < state.currentPhase * 2 + 2; w++) {
-    for (let d = 0; d < 5; d++) {
-      const dayOffset = w * 7 + d + (d >= 0 ? 1 : 0);
-      const date = new Date(start);
-      date.setDate(date.getDate() + dayOffset + Math.floor(d/5)*2);
-      
-      const actualDate = new Date(start);
-      actualDate.setDate(actualDate.getDate() + w * 7 + d + 1);
-      const dateStr = actualDate.toISOString().split('T')[0];
-      const status = isDateFullyComplete(dateStr);
-      
-      let cls = 'wp-dot';
-      if (dateStr === today) cls += ' today';
-      if (status === 'done') cls += ' done';
-      else if (status === 'partial') cls += ' partial';
-      dotsHtml += `<div class="${cls}"></div>`;
-    }
+  // Show this week's progress (4 days)
+  for (let d = 0; d < 4; d++) {
+    let cls = 'wp-dot';
+    if (isDayDoneThisWeek(state.currentPhase, d)) cls += ' done';
+    dotsHtml += `<div class="${cls}"></div>`;
   }
   document.getElementById('weekProgress').innerHTML = dotsHtml;
 }
 
-function renderSessionToggle() {
-  const today = getTodayStr();
-  const pi = state.currentPhase;
-  const dow = getDayOfWeek();
-  const dayIdx = Math.max(0, Math.min(dow - 1, 4));
-
-  const mCount = getSessionCompletionCount(today, pi, 'morning', 0);
-  const eCount = getSessionCompletionCount(today, pi, 'evening', dayIdx);
-  const mDone = mCount.done === mCount.total && mCount.total > 0;
-  const eDone = eCount.done === eCount.total && eCount.total > 0;
-
-  document.getElementById('sessionToggle').innerHTML = `
-    <button class="session-btn morning ${state.currentSession==='morning'?'active':''}" onclick="setSession('morning')">
-      <span class="s-check ${mDone?'visible':''}">✅</span>
-      <span class="s-icon">☀️</span>
-      Matin
-      <span class="s-time">5 min · Réveil</span>
-    </button>
-    <button class="session-btn evening ${state.currentSession==='evening'?'active':''}" onclick="setSession('evening')">
-      <span class="s-check ${eDone?'visible':''}">✅</span>
-      <span class="s-icon">🌙</span>
-      Soir
-      <span class="s-time">10 min · Spécifique</span>
-    </button>
-  `;
-}
-
 function renderDayTabs() {
-  const container = document.getElementById('dayTabs');
-  const label = document.getElementById('focusLabel');
-  
-  if (state.currentSession === 'morning') {
-    container.style.display = 'none';
-    label.textContent = 'Routine identique chaque jour';
-    return;
-  }
-  
-  container.style.display = 'flex';
   const phase = PROGRAM.phases[state.currentPhase];
-  const today = getTodayStr();
-  
-  container.innerHTML = phase.evening.days.map((day, i) => {
-    const count = getSessionCompletionCount(today, state.currentPhase, 'evening', i);
-    const done = count.done === count.total && count.total > 0;
-    return `<button class="day-tab ${i===state.currentDay?'active':''}" onclick="setDay(${i})">
-      ${day.name}
-      <span class="day-check ${done?'visible':''}">✅</span>
+  const html = phase.days.map((day, i) => {
+    const done = isDayDoneThisWeek(state.currentPhase, i);
+    const optional = i === 3;
+    return `<button class="day-btn day-${i+1} ${state.currentDay===i?'active':''} ${optional?'optional':''}" onclick="setDay(${i})">
+      <span class="d-num">${i+1}</span>
+      <span class="d-name">${day.name}</span>
+      <span class="d-check ${done?'visible':''}">✅</span>
     </button>`;
   }).join('');
+  document.getElementById('dayTabs').innerHTML = html;
+}
 
-  label.textContent = phase.evening.days[state.currentDay].focus;
+function renderFocusBanner() {
+  const phase = PROGRAM.phases[state.currentPhase];
+  const day = phase.days[state.currentDay];
+  const banner = document.getElementById('focusBanner');
+  banner.className = `focus-banner day-${state.currentDay+1}`;
+  banner.innerHTML = `
+    <div class="focus-label">JOUR ${state.currentDay+1} ${state.currentDay===3?'(OPTIONNEL)':''} · ${phase.label}</div>
+    <div class="focus-title">${day.name}</div>
+    <div class="focus-desc">${day.focus}</div>
+  `;
 }
 
 function renderExercises() {
   const today = getTodayStr();
   const pi = state.currentPhase;
-  const sess = state.currentSession;
-  const di = sess === 'morning' ? 0 : state.currentDay;
-  const key = getCompletionKey(today, pi, sess, di);
-  const exercises = getSessionExercises(pi, sess, di);
+  const di = state.currentDay;
+  const key = getCompletionKey(today, pi, di);
+  const dayData = PROGRAM.phases[pi].days[di];
+  const exercises = dayData.exercises;
+  const realExs = exercises.filter(e => e.id);
   
-  const allDone = exercises.every(ex => isExerciseCompleted(key, ex.id));
+  const allDone = realExs.every(ex => isExerciseCompleted(key, ex.id));
   const completeEl = document.getElementById('sessionComplete');
   const scSub = document.getElementById('scSub');
-  if (allDone && exercises.length > 0) {
+  if (allDone && realExs.length > 0) {
     completeEl.classList.add('visible');
-    scSub.textContent = sess === 'morning' ? 'Routine matin complète' : `${PROGRAM.phases[pi].evening.days[state.currentDay].focus} terminé`;
+    scSub.textContent = `${dayData.name} terminé · Bien joué`;
   } else {
     completeEl.classList.remove('visible');
   }
 
-  document.getElementById('exerciseList').innerHTML = exercises.map((ex, i) => {
+  let html = '';
+  let isFirst = true;
+  exercises.forEach((ex, i) => {
+    if (ex.section) {
+      html += `<div class="section-divider ${isFirst?'first':''}">${ex.section}</div>`;
+      isFirst = false;
+      return;
+    }
+    isFirst = false;
     const done = isExerciseCompleted(key, ex.id);
     const targetsHtml = (ex.targets||[]).map(t => `<span class="ex-target">${t}</span>`).join('');
     const equipHtml = ex.equip ? `<div class="ex-equip">🔧 ${ex.equip}</div>` : '';
-    const tipHtml = ex.tip ? `<div class="ex-tip">${ex.tip}</div>` : '';
-    const videoHtml = ex.video ? `<a class="ex-video" href="${ex.video}" target="_blank" onclick="event.stopPropagation()">▶ Vidéo</a>` : '';
+    const tipHtml = ex.tip ? `<div class="ex-tip"><strong>💡 Tip :</strong> ${ex.tip}</div>` : '';
+    const utilityHtml = ex.utility ? `<div class="ex-utility"><strong>Pourquoi :</strong> ${ex.utility}</div>` : '';
+    const videoHtml = ex.video ? `<a class="ex-video" href="${ex.video}" target="_blank" onclick="event.stopPropagation()">▶ Voir vidéo</a>` : '';
+    const descHtml = ex.description ? `<div class="ex-section-title">Comment faire</div><div class="ex-text">${ex.description}</div>` : '';
+    const targetsBlock = targetsHtml ? `<div class="ex-section-title">Travaille</div><div class="ex-targets">${targetsHtml}</div>` : '';
     
-    return `
-    <div class="exercise-card ${done?'completed':''}" id="card-${ex.id}" style="animation-delay:${i*0.05}s">
+    html += `
+    <div class="exercise-card ${done?'completed':''}" id="card-${ex.id}" style="animation-delay:${i*0.04}s">
       <div class="ex-main" onclick="handleCheck('${key}','${ex.id}',event)">
         <div class="ex-check">
           <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
@@ -1142,24 +1502,24 @@ function renderExercises() {
       <div class="ex-detail">
         <div class="ex-detail-inner">
           ${equipHtml}
-          <div class="ex-instructions">${ex.instructions||''}</div>
-          <div class="ex-targets">${targetsHtml}</div>
+          ${descHtml}
+          ${utilityHtml}
+          ${targetsBlock}
           ${tipHtml}
           ${videoHtml}
         </div>
       </div>
     </div>`;
-  }).join('');
+  });
+  document.getElementById('exerciseList').innerHTML = html;
 }
 
 function renderStats() {
   const today = new Date(getTodayStr());
   const start = new Date(state.startDate);
   
-  // Count total completed sessions
   let totalSessions = 0;
   let totalExercises = 0;
-  let streak = 0;
   let daysTracked = [];
   
   Object.keys(state.completed).forEach(key => {
@@ -1171,14 +1531,43 @@ function renderStats() {
   });
   totalSessions = daysTracked.length;
 
-  // Calculate streak
+  // Streak
+  let streak = 0;
   const check = new Date(today);
   while(true) {
     const ds = check.toISOString().split('T')[0];
-    const dow = check.getDay();
-    if (dow === 0 || dow === 6) { check.setDate(check.getDate()-1); continue; }
-    if (daysTracked.includes(ds)) { streak++; check.setDate(check.getDate()-1); }
-    else break;
+    if (daysTracked.includes(ds)) { 
+      streak++; 
+      check.setDate(check.getDate()-1); 
+    } else {
+      // Allow gaps for non-training days
+      let gap = 0;
+      const checkPrev = new Date(check);
+      while (gap < 3) {
+        checkPrev.setDate(checkPrev.getDate()-1);
+        gap++;
+        const dsPrev = checkPrev.toISOString().split('T')[0];
+        if (daysTracked.includes(dsPrev)) {
+          check.setDate(check.getDate() - gap);
+          streak++;
+          break;
+        }
+      }
+      if (gap >= 3) break;
+    }
+    if (streak > 100) break;
+  }
+
+  // Sessions this week
+  const dayOfWeek = (today.getDay() + 6) % 7;
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - dayOfWeek);
+  let thisWeekCount = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const ds = d.toISOString().split('T')[0];
+    if (daysTracked.includes(ds)) thisWeekCount++;
   }
 
   const week = getCurrentWeek();
@@ -1186,19 +1575,19 @@ function renderStats() {
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card">
       <div class="stat-label">Semaine</div>
-      <div class="stat-value">${week}<span style="font-size:0.8rem;color:var(--text-dim)"> /6</span></div>
+      <div class="stat-value">${week}<span style="font-size:0.8rem;color:var(--text-dim)"> /8</span></div>
       <div class="stat-sub">${PROGRAM.phases[getPhaseForWeek(week)].name}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Streak actuel</div>
-      <div class="stat-value" style="color:var(--accent)">${streak}<span style="font-size:0.8rem;color:var(--text-dim)"> jours</span></div>
+      <div class="stat-label">Cette semaine</div>
+      <div class="stat-value" style="color:var(--accent)">${thisWeekCount}<span style="font-size:0.8rem;color:var(--text-dim)"> /3-4</span></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Jours actifs</div>
       <div class="stat-value" style="color:var(--green)">${totalSessions}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Exercices faits</div>
+      <div class="stat-label">Exercices</div>
       <div class="stat-value" style="color:var(--accent-3)">${totalExercises}</div>
     </div>
   `;
@@ -1208,24 +1597,22 @@ function renderStats() {
   const headers = ['L','M','M','J','V','S','D'];
   let calHtml = headers.map(h => `<div class="cal-header">${h}</div>`).join('');
   
-  // Start from the start date's week
   const calStart = new Date(start);
-  calStart.setDate(calStart.getDate() - ((calStart.getDay() + 6) % 7)); // Monday
+  calStart.setDate(calStart.getDate() - ((calStart.getDay() + 6) % 7));
   
-  for (let i = 0; i < 42; i++) {
+  for (let i = 0; i < 56; i++) {
     const d = new Date(calStart);
     d.setDate(d.getDate() + i);
     const ds = d.toISOString().split('T')[0];
     const dayNum = d.getDate();
     const isFuture = d > today;
     const isToday = ds === getTodayStr();
-    const status = isDateFullyComplete(ds);
+    const isDone = daysTracked.includes(ds);
     
     let cls = 'cal-day';
     if (isFuture) cls += ' future';
     if (isToday) cls += ' today';
-    if (status === 'done') cls += ' done';
-    else if (status === 'partial') cls += ' partial';
+    if (isDone) cls += ' done';
     
     calHtml += `<div class="${cls}">${dayNum}</div>`;
   }
@@ -1277,23 +1664,15 @@ function setPhase(idx) {
   renderAll();
 }
 
-function setSession(sess) {
-  state.currentSession = sess;
-  saveState();
-  renderSessionToggle();
-  renderDayTabs();
-  renderExercises();
-}
-
 function setDay(idx) {
   state.currentDay = idx;
   saveState();
   renderDayTabs();
+  renderFocusBanner();
   renderExercises();
 }
 
 function handleCheck(key, exId, event) {
-  // Don't check if clicking expand
   if (event.target.closest('.ex-expand')) return;
   
   toggleExercise(key, exId);
@@ -1306,9 +1685,7 @@ function handleCheck(key, exId, event) {
     }
   }
   
-  // Update session complete badge and session toggle
   setTimeout(() => {
-    renderSessionToggle();
     renderDayTabs();
     renderExercises();
     renderHeader();
@@ -1347,22 +1724,11 @@ function saveTest(testId) {
   document.getElementById('test-val-' + testId).value = '';
 }
 
-// ============================================================
 // INIT
-// ============================================================
 loadState();
-
-// Auto-detect phase based on week
 const autoWeek = getCurrentWeek();
 state.currentPhase = getPhaseForWeek(autoWeek);
-
-// Auto-detect day
-const dow = getDayOfWeek();
-if (dow >= 1 && dow <= 5) {
-  state.currentDay = dow - 1;
-}
 saveState();
-
 renderAll();
 </script>
 
